@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 
 import NavBar from './NavBar';
-import AnimeListSidebar from './AnimeListSidebar';
+import FullListSidebar from './FullListSidebar';
 
 const animeListTable = (animes) => {
   return (
@@ -75,6 +75,14 @@ const mangaListTable = (manga) => {
 }
 
 const FullList = ({ medium }) => { 
+  const [list, setList] = useState("all");
+  const [format, setFormat] = useState("");
+  const [status, setStatus] = useState("");
+  const [genre, setGenre] = useState("");
+  const [country, setCountry] = useState("");
+  const [sort, setSort] = useState("Score");
+  const [display, setDisplay] = useState("list");
+
   const animes = [
     "BOCCHI THE ROCK!",
     "DAN DA DAN",
@@ -101,7 +109,24 @@ const FullList = ({ medium }) => {
       <NavBar currentPage={`${medium === "anime" ? "animeList" : "mangaList"}`} />
 
       <div className="flex flex-row mt-[5rem]">
-        <AnimeListSidebar />
+        <FullListSidebar
+          list={list}
+          setList={setList}
+          format={format}
+          setFormat={setFormat}
+          status={status}
+          setStatus={setStatus}
+          genre={genre}
+          setGenre={setGenre}
+          country={country}
+          setCountry={setCountry}
+          sort={sort}
+          setSort={setSort}
+          display={display}
+          setDisplay={setDisplay}
+          medium={medium}
+        />
+
         <div className="h-[calc(100vh-5rem)] flex flex-col gap-10 p-10 overflow-y-auto ml-[20%] w-[80vw]">          
           <div className="flex flex-col gap-2">
             <h1 className="text-white font-bold text-[2.5rem]">Completed</h1>
