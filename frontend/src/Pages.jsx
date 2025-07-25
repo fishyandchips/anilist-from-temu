@@ -4,8 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
-import AnimeList from './components/AnimeList';
-import MangaList from './components/MangaList';
+import FullList from './components/FullList';
 import Profile from './components/Profile';
 import Info from './components/Info';
 import Following from './components/Following';
@@ -31,8 +30,8 @@ const Pages = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/animelist" element={<AnimeList />} />
-        <Route path="/mangalist" element={<MangaList />} />
+        <Route path="/animelist" element={<FullList medium={"anime"} />} />
+        <Route path="/mangalist" element={<FullList medium={"manga"} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/info" element={<Info />} />
         <Route path="/following" element={<Following />} />
