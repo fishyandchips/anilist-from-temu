@@ -10,3 +10,8 @@
 html, body {
   background-color: #282828;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+  -webkit-appearance: none;
+}

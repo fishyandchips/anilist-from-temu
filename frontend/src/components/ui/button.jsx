@@ -11,8 +11,10 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground hover:bg-primary/80 transition-all duration-300 ease-in-out",
+        warning:
+          "bg-[#FF7F7F] text-primary-foreground hover:bg-[#FF7F7F]/80 transition-all duration-300 ease-in-out",
         outlined:
-          "text-secondary border-2 border-secondary hover:bg-secondary hover:text-secondary-foreground hover:border-secondary-foreground transition-all duration-300 ease-in-out",
+          "text-secondary border-2 border-secondary hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all duration-300 ease-in-out",
         outlinedMain:
           "text-primary border-2 border-primary hover:border-primary/80 hover:text-primary/80 transition-all duration-300 ease-in-out",
       },

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {  
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="text-white flex flex-col gap-[3rem] items-center justify-center w-screen h-screen">
@@ -24,7 +26,7 @@ const Login = () => {
           </div>
 
           <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-            <Button className="relative font-bold rounded-full w-full">
+            <Button className="relative font-bold rounded-full w-full" onClick={() => navigate('/home')}>
               Log in <ArrowRightIcon className="absolute right-4"/>
             </Button>
           </div>
