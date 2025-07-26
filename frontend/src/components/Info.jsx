@@ -1,52 +1,46 @@
 import { useState, useEffect } from 'react';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon, StarFilledIcon, HeartIcon, HeartFilledIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { Link, useNavigate } from 'react-router-dom';
-import { FcGoogle } from "react-icons/fc";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
+import { StarFilledIcon, HeartIcon, HeartFilledIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScoreChart } from './ScoreChart';
 
 import NavBar from './NavBar';
-import Sidebar from './Sidebar';
 import SwipeCarousel from './SwipeCarousel';
 
 const Info = () => { 
   const seriesData = [
-    { label: "Format", value: "TV"},
-    { label: "Episodes", value: "12"},
-    { label: "Duration", value: "24 mins per episode"},
-    { label: "Status", value: "Finished"},
-    { label: "Aired", value: "9 Oct 2022 - 25 Dec 2022"},
-    { label: "Season", value: "Fall 2022"},
-    { label: "Favourites", value: "23,249"},
-    { label: "Romaji", value: "Bocchi the Rock!"},
-    { label: "English", value: "BOCCHI THE ROCK!"},
-    { label: "Native", value: "ぼっち・ざ・ろっく！"}
+    { label: "Format", value: "TV" },
+    { label: "Episodes", value: "12" },
+    { label: "Duration", value: "24 mins per episode" },
+    { label: "Status", value: "Finished" },
+    { label: "Aired", value: "9 Oct 2022 - 25 Dec 2022" },
+    { label: "Season", value: "Fall 2022" },
+    { label: "Favourites", value: "23,249" },
+    { label: "Romaji", value: "Bocchi the Rock!" },
+    { label: "English", value: "BOCCHI THE ROCK!" },
+    { label: "Native", value: "ぼっち・ざ・ろっく！" }
   ];
 
   const tagData = [
-    { label: "Band", value: "98%"},
-    { label: "Female Protagonist", value: "93%"},
-    { label: "Primarily Female Cast", value: "93%"},
-    { label: "Primarily Teen Cast", value: "91%"},
-    { label: "Rock Music", value: "90%"},
-    { label: "Coming of Age", value: "86%"},
-    { label: "Cute Girls Doing Cute Things", value: "86%"},
-    { label: "Hikikomori", value: "85%"},
-    { label: "Rehabilitation", value: "84%"},
-    { label: "Surreal Comedy", value: "80%"}
+    { label: "Band", value: "98%" },
+    { label: "Female Protagonist", value: "93%" },
+    { label: "Primarily Female Cast", value: "93%" },
+    { label: "Primarily Teen Cast", value: "91%" },
+    { label: "Rock Music", value: "90%" },
+    { label: "Coming of Age", value: "86%" },
+    { label: "Cute Girls Doing Cute Things", value: "86%" },
+    { label: "Hikikomori", value: "85%" },
+    { label: "Rehabilitation", value: "84%" },
+    { label: "Surreal Comedy", value: "80%" }
   ];
 
   const externalData = [
-    { label: "Official Site", isJP: true},
-    { label: "Instagram", isJP: true},
-    { label: "Twitter", isJP: true},
-    { label: "Bilibili TV", isJP: false},
-    { label: "Crunchyroll", isJP: false},
-    { label: "Netflix", isJP: false}
+    { label: "Official Site", isJP: true },
+    { label: "Instagram", isJP: true },
+    { label: "Twitter", isJP: true },
+    { label: "Bilibili TV", isJP: false },
+    { label: "Crunchyroll", isJP: false },
+    { label: "Netflix", isJP: false }
   ];
 
   const seriesDisplay = (count) => {

@@ -1,11 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Link, useNavigate } from 'react-router-dom';
-import { FcGoogle } from "react-icons/fc";
-import { GoSidebarCollapse } from "react-icons/go";
 import { ListBulletIcon, HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
 import { FaTags } from "react-icons/fa6";
@@ -32,6 +25,21 @@ const Home = () => {
         <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
       </div>
     ));
+  }
+
+  const showcaseSection = ({ heading, elements }) => {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-row justify-between items-center">
+          <h1 className="text-white font-bold text-[1.5rem]">{heading}</h1>
+          <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">
+            View all
+          </p>
+        </div>
+
+        <SwipeCarousel elements={elements}/>
+      </div>
+    );
   }
 
   const yearsFrom1940 = () => {
@@ -172,66 +180,14 @@ const Home = () => {
               </div>
             )}
           </div>
-          
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center">
-              <h1 className="text-white font-bold text-[1.5rem]">For you</h1>
-              <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-            </div>
 
-            <SwipeCarousel
-              elements={seriesDisplay(10)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center">
-              <h1 className="text-white font-bold text-[1.5rem]">Trending Now</h1>
-              <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-            </div>
-
-            <SwipeCarousel
-              elements={seriesDisplay(10)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center">
-              <h1 className="text-white font-bold text-[1.5rem]">Popular This Season</h1>
-              <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-            </div>
-
-            <SwipeCarousel
-              elements={seriesDisplay(10)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center">
-              <h1 className="text-white font-bold text-[1.5rem]">Upcoming Next Season</h1>
-              <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-            </div>
-
-            <SwipeCarousel
-              elements={seriesDisplay(10)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center">
-              <h1 className="text-white font-bold text-[1.5rem]">All Time Popular</h1>
-              <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-            </div>
-
-            <SwipeCarousel
-              elements={seriesDisplay(10)}
-            />
-          </div>
+          {showcaseSection({ heading: "For you", elements: seriesDisplay(10) })}
+          {showcaseSection({ heading: "Trending Now", elements: seriesDisplay(10) })}
+          {showcaseSection({ heading: "Popular This Season", elements: seriesDisplay(10) })}
+          {showcaseSection({ heading: "Upcoming Next Season", elements: seriesDisplay(10) })}
+          {showcaseSection({ heading: "All Time Popular", elements: seriesDisplay(10) })}
         </div>
       </div>
-
-
-
     </>
   )
 }

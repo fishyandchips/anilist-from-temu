@@ -127,33 +127,37 @@ const FullList = ({ medium }) => {
           medium={medium}
         />
 
-        <div className="h-[calc(100vh-5rem)] flex flex-col gap-10 p-10 overflow-y-auto ml-[20%] w-[80vw]">          
-          <div className="flex flex-col gap-2">
-            <h1 className="text-white font-bold text-[2.5rem]">Completed</h1>
-            {medium === "anime" ? (
-              <>
-                {animeListTable(animes)}
-              </>
-            ) : (
-              <>
-                {mangaListTable(animes)}
-              </>
-            )}
-          </div>
+        <div className="h-[calc(100vh-5rem)] flex flex-col gap-10 p-10 overflow-y-auto ml-[20%] w-[80vw]">
+          {(list === "All" || list === "Completed") && (
+            <div className="flex flex-col gap-2">
+              <h1 className="text-white font-bold text-[2.5rem]">Completed</h1>
+              {medium === "anime" ? (
+                <>
+                  {animeListTable(animes)}
+                </>
+              ) : (
+                <>
+                  {mangaListTable(animes)}
+                </>
+              )}
+            </div>
+          )}
 
-          <div className="flex flex-col gap-2">
-            {medium === "anime" ? (
-              <>
-                <h1 className="text-white font-bold text-[2.5rem]">Plan to Watch</h1>
-                {animeListTable(plannedAnimes)}
-              </>
-            ) : (
-              <>
-                <h1 className="text-white font-bold text-[2.5rem]">Plan to Read</h1>
-                {mangaListTable(plannedAnimes)}
-              </>
-            )}
-          </div>
+          {(list === "All" || list === "Plan to Watch" || list === "Plan to Read") && (
+            <div className="flex flex-col gap-2">
+              {medium === "anime" ? (
+                <>
+                  <h1 className="text-white font-bold text-[2.5rem]">Plan to Watch</h1>
+                  {animeListTable(plannedAnimes)}
+                </>
+              ) : (
+                <>
+                  <h1 className="text-white font-bold text-[2.5rem]">Plan to Read</h1>
+                  {mangaListTable(plannedAnimes)}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

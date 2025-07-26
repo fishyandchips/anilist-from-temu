@@ -7,11 +7,11 @@ import CustomToggle from './CustomToggle';
 import CustomLayoutToggle from './CustomLayoutToggle';
 import CustomSelect from './CustomSelect';
 
-const FollowingSidebar = () => { 
-  const [followStatus, setFollowStatus] = useState("Following");
-  const [sort, setSort] = useState("Date Followed");
-  const [display, setDisplay] = useState("Card");
-
+const FollowingSidebar = ({
+  followStatus, setFollowStatus,
+  sort, setSort,
+  display, setDisplay
+}) => { 
   return (
     <>
       <div className="fixed h-[calc(100vh-5rem)] w-[20%] bg-[#232323] flex flex-col gap-6 overflow-y-auto p-6">
