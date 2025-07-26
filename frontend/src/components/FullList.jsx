@@ -75,13 +75,13 @@ const mangaListTable = (manga) => {
 }
 
 const FullList = ({ medium }) => { 
-  const [list, setList] = useState("all");
+  const [list, setList] = useState("All");
   const [format, setFormat] = useState("");
   const [status, setStatus] = useState("");
   const [genre, setGenre] = useState("");
   const [country, setCountry] = useState("");
   const [sort, setSort] = useState("Score");
-  const [display, setDisplay] = useState("list");
+  const [display, setDisplay] = useState("List");
 
   const animes = [
     "BOCCHI THE ROCK!",

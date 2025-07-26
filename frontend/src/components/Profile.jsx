@@ -12,12 +12,11 @@ import { BsBookmarkStar } from "react-icons/bs";
 import { IoBookOutline } from "react-icons/io5";
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { GoNumber } from "react-icons/go";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
 
+import CustomLayoutToggle from './CustomLayoutToggle';
+import CustomMediumToggle from './CustomMediumToggle';
 import NavBar from './NavBar';
+import SwipeCarousel from './SwipeCarousel';
 import { HistoryChart } from './HistoryChart';
 
 const Profile = () => {  
@@ -41,10 +40,10 @@ const Profile = () => {
     "Thriller"
   ];
   
-  const [stats, setStats] = useState("number");
-  const [statsMedium, setStatsMedium] = useState("stats-anime");
-  const [favouritesMedium, setFavouritesMedium] = useState("favourites-anime");
-  const [historicalMedium, setHistoricalMedium] = useState("historical-anime");
+  const [stats, setStats] = useState("Number");
+  const [statsMedium, setStatsMedium] = useState("Anime");
+  const [favouritesMedium, setFavouritesMedium] = useState("Anime");
+  const [historicalMedium, setHistoricalMedium] = useState("Anime");
   const [recentDropdown, setRecentDropdown] = useState(false);
   const meRef = useRef(null);
   const statsRef = useRef(null);
@@ -52,6 +51,43 @@ const Profile = () => {
   const historyRef = useRef(null);
   const medalsRef = useRef(null);
   const [activeSection, setActiveSection] = useState(null);
+
+  const genreCard = (count) => {
+    return [...Array(count)].map((_, i) => (
+      <div className="w-[35rem] h-[20rem] bg-[#3C3C3C] rounded-lg shrink-0 p-[2rem] flex flex-col justify-between gap-3">
+        <h2 className="text-white text-[1.6rem] font-bold">{genres[Math.floor(Math.random() * genres.length)]}</h2>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-col">
+            <span className="text-white font-bold">{Math.floor(Math.random() * 200) + 1}</span>
+            <span className="text-white opacity-50">Count</span>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-white font-bold">{(Math.random() * 100 + 1).toFixed(2)}%</span>
+            <span className="text-white opacity-50">Mean Score</span>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-white font-bold">{Math.floor(Math.random() * 50) + 1} days {Math.floor(Math.random() * 24) + 1} hours</span>
+            <span className="text-white opacity-50">Time Watched</span>
+          </div>
+        </div>
+
+        <SwipeCarousel
+          elements={seriesDisplay(10, '6rem', '8rem')}
+        />
+      </div>
+    ));
+  }
+
+  const seriesDisplay = (count, width, height) => {
+    const widthClass = `w-[${width}]`;
+    const heightClass = `h-[${height}]`;
+
+    return [...Array(count)].map((_, i) => (
+      <Skeleton key={i} className={`bg-[#FFFFFF] rounded-lg shrink-0 ${widthClass} ${heightClass}`} />
+    ));
+  }
 
   const scrollTo = (ref, section) => {
     if (ref.current) {
@@ -200,131 +236,52 @@ const Profile = () => {
           <div className="flex justify-between items-center">
             <h1 ref={statsRef} className="text-white font-bold text-[1.5rem] underline decoration-[#7FC3FF] underline-offset-[0.5rem]">Stats</h1>
             <div className="flex flex-row gap-[3rem]">
-              <ToggleGroup
-                variant="primary"
-                type="single"
+              <CustomLayoutToggle
                 value={stats}
-                onValueChange={(newStats) => {
-                  if (newStats) {
-                    setStats(newStats);
-                  }
-                }}
-                className="text-white bg-[#3C3C3C] rounded-lg"
-              >
-                <ToggleGroupItem value="number" className="flex justify-center items-center">
-                  <GoNumber />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="time" className="flex justify-center items-center">
-                  <StarFilledIcon />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="score" className="flex justify-center items-center">
-                  <ClockIcon />
-                </ToggleGroupItem>
-              </ToggleGroup>
+                onChange={setStats}
+                options={[
+                  { value: "Number", icon: <GoNumber /> },
+                  { value: "Time", icon: <StarFilledIcon /> },
+                  { value: "Score", icon: <ClockIcon /> }
+                ]}
+              />
 
-              <ToggleGroup
-                variant="primary"
-                type="single"
+              <CustomMediumToggle
                 value={statsMedium}
-                onValueChange={(newStatsMedium) => {
-                  if (newStatsMedium) {
-                    setStatsMedium(newStatsMedium);
-                  }
-                }}
-                className="text-white bg-[#3C3C3C] rounded-full"
-              >
-                <ToggleGroupItem value="stats-anime" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                  <span>Anime</span>
-                </ToggleGroupItem>
-                <ToggleGroupItem value="stats-manga" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                  <span>Manga</span>
-                </ToggleGroupItem>
-              </ToggleGroup>
+                onChange={setStatsMedium}
+                options={["Anime", "Manga"]}
+              />
             </div>
           </div>
 
-          <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {[...Array(12)].map((_, i) => (
-              <div className="w-[35rem] h-[20rem] bg-[#3C3C3C] rounded-lg shrink-0 p-[2rem] flex flex-col justify-between">
-                <h2 className="text-white text-[1.6rem] font-bold">{genres[Math.floor(Math.random() * genres.length)]}</h2>
-                <div className="flex flex-row justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-white font-bold">{Math.floor(Math.random() * 200) + 1}</span>
-                    <span className="text-white opacity-50">Count</span>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <span className="text-white font-bold">{(Math.random() * 100 + 1).toFixed(2)}%</span>
-                    <span className="text-white opacity-50">Mean Score</span>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <span className="text-white font-bold">{Math.floor(Math.random() * 50) + 1} days {Math.floor(Math.random() * 24) + 1} hours</span>
-                    <span className="text-white opacity-50">Time Watched</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  {[...Array(10)].map((_, i) => (
-                    <Skeleton className="w-[6rem] h-[8rem] bg-[#282828] rounded-lg shrink-0" />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <SwipeCarousel
+            elements={genreCard(12)}
+          />
         </div>
 
         <div className="w-full h-auto bg-[#282828] flex flex-col pt-[1rem] pb-[2rem] px-[5rem] gap-5">
           <div className="flex justify-between items-center">
             <h1 ref={favRef} className="text-white font-bold text-[1.5rem] underline decoration-[#7FC3FF] underline-offset-[0.5rem]">Favourites</h1>
-            <ToggleGroup
-              variant="primary"
-              type="single"
+            <CustomMediumToggle
               value={favouritesMedium}
-              onValueChange={(newFavouritesMedium) => {
-                if (newFavouritesMedium) {
-                  setFavouritesMedium(newFavouritesMedium);
-                }
-              }}
-              className="text-white bg-[#3C3C3C] rounded-full"
-            >
-              <ToggleGroupItem value="favourites-anime" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                <span>Anime</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="favourites-manga" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                <span>Manga</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
+              onChange={setFavouritesMedium}
+              options={["Anime", "Manga"]}
+            />
           </div>
 
-          <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {[...Array(10)].map((_, i) => (
-              <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
-            ))}
-          </div>
+          <SwipeCarousel
+            elements={seriesDisplay(10, '12vw', '35vh')}
+          />
         </div>
 
         <div className="w-full h-auto bg-[#282828] flex flex-col pt-[1rem] pb-[2rem] px-[5rem] gap-5">
           <div className="flex justify-between items-center">
             <h1 ref={historyRef} className="text-white font-bold text-[1.5rem] underline decoration-[#7FC3FF] underline-offset-[0.5rem]">Historical</h1>
-            <ToggleGroup
-              variant="primary"
-              type="single"
+            <CustomMediumToggle
               value={historicalMedium}
-              onValueChange={(newHistoricalMedium) => {
-                if (newHistoricalMedium) {
-                  setHistoricalMedium(newHistoricalMedium);
-                }
-              }}
-              className="text-white bg-[#3C3C3C] rounded-full"
-            >
-              <ToggleGroupItem value="historical-anime" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                <span>Anime</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="historical-manga" className="flex justify-center items-center rounded-full font-bold px-[2rem]">
-                <span>Manga</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
+              onChange={setHistoricalMedium}
+              options={["Anime", "Manga"]}
+            />
           </div>
 
           <div className="flex flex-col gap-5">

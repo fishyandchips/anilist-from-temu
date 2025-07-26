@@ -9,38 +9,12 @@ import { GoSidebarCollapse } from "react-icons/go";
 import { ListBulletIcon, HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
 import { FaTags } from "react-icons/fa6";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectTriggerSort,
-  SelectValue,
-} from "@/components/ui/select";
 
 import NavBar from './NavBar';
 import Sidebar from './Sidebar';
-
-// const Component = ({ title, data }) => {
-//   return (
-// <div className="flex flex-col gap-2">
-//             <div className="flex flex-row justify-between items-center">
-//               <h1 className="text-white font-bold text-[2.5rem]">For you</h1>
-//               <p className="text-white opacity-50 text-[1.1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
-//             </div>
-
-//             <div className="flex flex-row gap-3">
-//               {[...Array(6)].map((_, i) => (
-//                 <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg"></div>
-//               ))}
-//             </div>
-//           </div>
-//   )
-// }
+import CustomLayoutToggle from './CustomLayoutToggle';
+import CustomSelect from './CustomSelect';
+import SwipeCarousel from './SwipeCarousel';
 
 const Home = () => { 
   const [collapsed, setCollapsed] = useState(true);
@@ -48,8 +22,17 @@ const Home = () => {
   const [year, setYear] = useState("");
   const [genre, setGenre] = useState("");
   const [season, setSeason] = useState("");
-  const [sort, setSort] = useState("average-score");
-  const [display, setDisplay] = useState("list");
+  const [sort, setSort] = useState("Average Score");
+  const [display, setDisplay] = useState("List");
+
+  const seriesDisplay = (count) => {
+    return [...Array(count)].map((_, i) => (
+      <div key={i} className="flex flex-col gap-2">
+        <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
+        <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
+      </div>
+    ));
+  }
 
   const yearsFrom1940 = () => {
     const yearsArray = [];
@@ -88,82 +71,50 @@ const Home = () => {
 
               <div className="flex flex-col w-[15%] gap-2">
                 <h2 className="text-white font-bold text-[1.2rem]">Genres</h2>
-                <Select value={genre} onValueChange={(value) => {if (value == "any") setGenre(""); else setGenre(value);}}>
-                  <SelectTrigger className={genre ? "bg-primary/40 text-white h-full" : "bg-[#3C3C3C] text-white h-full"}>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any" className="text-[rgba(0,0,0,0.25)]">Any</SelectItem>
-                    <SelectItem value="action">Action</SelectItem>
-                    <SelectItem value="adventure">Adventure</SelectItem>
-                    <SelectItem value="comedy">Comedy</SelectItem>
-                    <SelectItem value="drama">Drama</SelectItem>
-                    <SelectItem value="ecchi">Ecchi</SelectItem>
-                    <SelectItem value="fantasy">Fantasy</SelectItem>
-                    <SelectItem value="horror">Horror</SelectItem>
-                    <SelectItem value="mahou-shoujo">Mahou Shoujo</SelectItem>
-                    <SelectItem value="mecha">Mecha</SelectItem>
-                    <SelectItem value="music">Music</SelectItem>
-                    <SelectItem value="mystery">Mystery</SelectItem>
-                    <SelectItem value="psychological">Psychological</SelectItem>
-                    <SelectItem value="romance">Romance</SelectItem>
-                    <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                    <SelectItem value="slice-of-life">Slice of Life</SelectItem>
-                    <SelectItem value="sports">Sports</SelectItem>
-                    <SelectItem value="supernatural">Supernatural</SelectItem>
-                    <SelectItem value="thriller">Thriller</SelectItem>
-                  </SelectContent>
-                </Select>
+                <CustomSelect
+                  value={genre}
+                  onChange={setGenre}
+                  placeholder={"Genre"}
+                  optional={true}
+                  options={[
+                    "Action", "Adventure", "Comedy", "Drama", "Ecchi", "Fantasy", "Horror", "Mahou Shoujo",
+                    "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life",
+                    "Sports", "Supernatural", "Thriller"
+                  ]}
+                />
               </div>
 
               <div className="flex flex-col w-[15%] gap-2">
                 <h2 className="text-white font-bold text-[1.2rem]">Year</h2>
-                <Select value={year} onValueChange={(value) => {if (value == "any") setYear(""); else setYear(value);}}>
-                  <SelectTrigger className={year ? "bg-primary/40 text-white h-full" : "bg-[#3C3C3C] text-white h-full"}>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any" className="text-[rgba(0,0,0,0.25)]">Any</SelectItem>
-                    {yearsFrom1940().map((value, index) => (
-                      <SelectItem value={value} key={index}>{value}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CustomSelect
+                  value={year}
+                  onChange={setYear}
+                  placeholder={"Year"}
+                  optional={true}
+                  options={yearsFrom1940()}
+                />
               </div>
 
               <div className="flex flex-col w-[15%] gap-2">
                 <h2 className="text-white font-bold text-[1.2rem]">Season</h2>
-                <Select value={season} onValueChange={(value) => {if (value == "any") setSeason(""); else setSeason(value);}}>
-                  <SelectTrigger className={season ? "bg-primary/40 text-white h-full" : "bg-[#3C3C3C] text-white h-full"}>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any" className="text-[rgba(0,0,0,0.25)]">Any</SelectItem>
-                    <SelectItem value="summer">Summer</SelectItem>
-                    <SelectItem value="autumn">Autumn</SelectItem>
-                    <SelectItem value="winter">Winter</SelectItem>
-                    <SelectItem value="spring">Spring</SelectItem>
-                  </SelectContent>
-                </Select>
+                <CustomSelect
+                  value={season}
+                  onChange={setSeason}
+                  placeholder={"Season"}
+                  optional={true}
+                  options={["Summer", "Autumn", "Winter", "Spring"]}
+                />
               </div>
 
               <div className="flex flex-col w-[15%] gap-2">
                 <h2 className="text-white font-bold text-[1.2rem]">Format</h2>
-                <Select value={format} onValueChange={(value) => {if (value == "any") setFormat(""); else setFormat(value);}}>
-                  <SelectTrigger className={format ? "bg-primary/40 text-white h-full" : "bg-[#3C3C3C] text-white h-full"}>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any" className="text-[rgba(0,0,0,0.25)]">Any</SelectItem>
-                    <SelectItem value="tv">TV</SelectItem>
-                    <SelectItem value="tv-short">TV Short</SelectItem>
-                    <SelectItem value="movie">Movie</SelectItem>
-                    <SelectItem value="special">Special</SelectItem>
-                    <SelectItem value="ova">OVA</SelectItem>
-                    <SelectItem value="ona">ONA</SelectItem>
-                    <SelectItem value="music">Music</SelectItem>
-                  </SelectContent>
-                </Select>
+                <CustomSelect
+                  value={format}
+                  onChange={setFormat}
+                  placeholder={"Format"}
+                  optional={true}
+                  options={["TV", "TV Short", "Movie", "Special", "OVA", "ONA", "Music"]}
+                />
               </div>
             </div>
 
@@ -198,39 +149,25 @@ const Home = () => {
                 </div>
 
                 <div className="flex flex-row w-[23%] gap-4 items-center">
-                  <Select value={sort} onValueChange={(value) => setSort(value)}>
-                    <SelectTriggerSort className="w-full h-full">
-                      <SelectValue />
-                    </SelectTriggerSort>
-                    <SelectContent>
-                      <SelectItem value="title">Title</SelectItem>
-                      <SelectItem value="popularity">Popularity</SelectItem>
-                      <SelectItem value="average-score">Average Score</SelectItem>
-                      <SelectItem value="trending">Trending</SelectItem>
-                      <SelectItem value="favourites">Favourites</SelectItem>
-                      <SelectItem value="date-added">Date Added</SelectItem>
-                      <SelectItem value="release-date">Release Date</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <CustomSelect
+                    value={sort}
+                    onChange={setSort}
+                    placeholder={"Sort"}
+                    optional={false}
+                    options={[
+                      "Title", "Popularity", "Average Score", "Trending", "Favourites",
+                      "Date Added", "Release Date"
+                    ]}
+                  />
 
-                  <ToggleGroup
-                    variant="primary"
-                    type="single"
+                  <CustomLayoutToggle
                     value={display}
-                    onValueChange={(newDisplay) => {
-                      if (newDisplay) {
-                        setDisplay(newDisplay);
-                      }
-                    }}
-                    className="text-white bg-[#3C3C3C] rounded-lg"
-                  >
-                    <ToggleGroupItem value="list" className="flex justify-center items-center">
-                      <ListBulletIcon />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="compact" className="flex justify-center items-center">
-                      <HamburgerMenuIcon />
-                    </ToggleGroupItem>
-                  </ToggleGroup>
+                    onChange={setDisplay}
+                    options={[
+                      { value: "List", icon: <ListBulletIcon /> },
+                      { value: "Compact", icon: <HamburgerMenuIcon /> }
+                    ]}
+                  />
                 </div>
               </div>
             )}
@@ -242,14 +179,9 @@ const Home = () => {
               <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
             </div>
 
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <div className="flex flex-col gap-2">
-                  <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-                  <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
-                </div>
-              ))}
-            </div>
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
 
           <div className="flex flex-col gap-3">
@@ -258,14 +190,9 @@ const Home = () => {
               <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
             </div>
 
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <div className="flex flex-col gap-2">
-                  <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-                  <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
-                </div>
-              ))}
-            </div>
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
 
           <div className="flex flex-col gap-3">
@@ -274,14 +201,9 @@ const Home = () => {
               <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
             </div>
 
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <div className="flex flex-col gap-2">
-                  <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-                  <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
-                </div>
-              ))}
-            </div>
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
 
           <div className="flex flex-col gap-3">
@@ -290,14 +212,9 @@ const Home = () => {
               <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
             </div>
 
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <div className="flex flex-col gap-2">
-                  <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-                  <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
-                </div>
-              ))}
-            </div>
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
 
           <div className="flex flex-col gap-3">
@@ -306,14 +223,9 @@ const Home = () => {
               <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">View all</p>
             </div>
 
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <div className="flex flex-col gap-2">
-                  <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-                  <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
-                </div>
-              ))}
-            </div>
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
         </div>
       </div>

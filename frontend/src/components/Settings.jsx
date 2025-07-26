@@ -8,15 +8,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { GoSidebarCollapse } from "react-icons/go";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
 
+import CustomToggle from './CustomToggle';
 import NavBar from './NavBar';
 
 const Settings = () => { 
-  const [settings, setSettings] = useState("profile");
+  const [settings, setSettings] = useState("Profile");
   const [editUsername, setEditUsername] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
@@ -27,28 +24,16 @@ const Settings = () => {
 
       <div className="flex flex-row mt-[5rem]">
         <div className="fixed h-[calc(100vh-5rem)] w-[20%] bg-[#232323] flex flex-col gap-6 overflow-y-auto p-6">
-          <ToggleGroup
-            type="single"
+          <CustomToggle
             value={settings}
-            onValueChange={(newSettings) => {
-              if (newSettings) {
-                setSettings(newSettings);
-              }
-            }}
-            className="text-white flex flex-col"
-          >
-            <span className="text-[0.8rem] opacity-50 text-white w-full">Settings</span>
-            <ToggleGroupItem value="profile" className="w-full">
-              Profile
-            </ToggleGroupItem>
-            <ToggleGroupItem value="account" className="w-full">
-              Account
-            </ToggleGroupItem>
-          </ToggleGroup>
+            onChange={setSettings}
+            label={"Settings"}
+            options={["Profile", "Account"]}
+          />
         </div>
 
         <div className="h-[calc(100vh-5rem)] flex flex-col gap-10 p-10 overflow-y-auto ml-[20%] w-[80vw]"> 
-          {settings === "profile" ? (
+          {settings === "Profile" ? (
             <div className="flex flex-col gap-10">
               <div className="flex flex-row w-full">
                 <div className="flex items-center w-[30%]">

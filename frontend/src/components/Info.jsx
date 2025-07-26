@@ -11,8 +11,79 @@ import { ScoreChart } from './ScoreChart';
 
 import NavBar from './NavBar';
 import Sidebar from './Sidebar';
+import SwipeCarousel from './SwipeCarousel';
 
 const Info = () => { 
+  const seriesData = [
+    { label: "Format", value: "TV"},
+    { label: "Episodes", value: "12"},
+    { label: "Duration", value: "24 mins per episode"},
+    { label: "Status", value: "Finished"},
+    { label: "Aired", value: "9 Oct 2022 - 25 Dec 2022"},
+    { label: "Season", value: "Fall 2022"},
+    { label: "Favourites", value: "23,249"},
+    { label: "Romaji", value: "Bocchi the Rock!"},
+    { label: "English", value: "BOCCHI THE ROCK!"},
+    { label: "Native", value: "ぼっち・ざ・ろっく！"}
+  ];
+
+  const tagData = [
+    { label: "Band", value: "98%"},
+    { label: "Female Protagonist", value: "93%"},
+    { label: "Primarily Female Cast", value: "93%"},
+    { label: "Primarily Teen Cast", value: "91%"},
+    { label: "Rock Music", value: "90%"},
+    { label: "Coming of Age", value: "86%"},
+    { label: "Cute Girls Doing Cute Things", value: "86%"},
+    { label: "Hikikomori", value: "85%"},
+    { label: "Rehabilitation", value: "84%"},
+    { label: "Surreal Comedy", value: "80%"}
+  ];
+
+  const externalData = [
+    { label: "Official Site", isJP: true},
+    { label: "Instagram", isJP: true},
+    { label: "Twitter", isJP: true},
+    { label: "Bilibili TV", isJP: false},
+    { label: "Crunchyroll", isJP: false},
+    { label: "Netflix", isJP: false}
+  ];
+
+  const seriesDisplay = (count) => {
+    return [...Array(count)].map((_, i) => (
+      <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
+    ));
+  }
+
+  const seriesMetadata = () => {
+    return seriesData.map((value, index) => (
+      <div key={index} className="text-white opacity-50">
+        <h2 className="font-bold">{value.label}</h2>
+        <h3>{value.value}</h3>
+      </div>
+    ));
+  }
+
+  const tagDetails = () => {
+    return tagData.map((value, index) => (
+      <div key={index} className="flex flex-row flex-wrap justify-between items-center">
+        <h3>{value.label}</h3>
+        <h3>{value.value}</h3>
+      </div>
+    ));
+  }
+
+  const externalLinks = () => {
+    return externalData.map((value, index) => (
+      <div key={index} className="flex flex-row gap-3">
+        <div className="aspect-square w-5 bg-white opacity-50"></div>
+        <div className="flex flex-row gap-1">
+          <span className="text-white">{value.label}</span>
+          <span className="text-[0.7rem] mt-auto">{value.isJP && "JP"}</span>
+        </div>
+      </div>
+    ));
+  }
 
   return (
     <>
@@ -85,153 +156,20 @@ const Info = () => {
 
 
         <div className="w-[20%] bg-[#232323] flex flex-col gap-6 p-6">
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Format</h2>
-            <h3>TV</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Episodes</h2>
-            <h3>12</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Duration</h2>
-            <h3>24 mins per episode</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Status</h2>
-            <h3>Finished</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Aired</h2>
-            <h3>9 Oct 2022 - 25 Dec 2022</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Season</h2>
-            <h3>Fall 2022</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Favourites</h2>
-            <h3>23,249</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Romaji</h2>
-            <h3>Bocchi the Rock!</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">English</h2>
-            <h3>BOCCHI THE ROCK!</h3>
-          </div>
-
-          <div className="text-white opacity-50">
-            <h2 className="font-bold">Native</h2>
-            <h3>ぼっち・ざ・ろっく！</h3>
-          </div>
+          {seriesMetadata()}
 
           <div className="text-white opacity-50 flex flex-col gap-2">
             <h2 className="font-bold">Tags</h2>
 
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Band</h3>
-              <h3>98%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Female Protagonist</h3>
-              <h3>93%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Primarily Female Cast</h3>
-              <h3>93%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Primarily Teen Cast</h3>
-              <h3>91%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Rock Music</h3>
-              <h3>90%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Coming of Age</h3>
-              <h3>86%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Cute Girls Doing Cute Things</h3>
-              <h3>86%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Hikikomori</h3>
-              <h3>85%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Rehabilitation</h3>
-              <h3>84%</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between items-center">
-              <h3>Surreal Comedy</h3>
-              <h3>80%</h3>
-            </div>
+            {tagDetails()}
 
             <span className="text-[0.75rem]">Show spoiler tags</span>
           </div>
 
           <div className="text-white text-opacity-50 flex flex-col gap-2">
             <h2 className="font-bold">External & Streaming</h2>
-            
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <div className="flex flex-row gap-1">
-                <span className="text-white">Official Site</span>
-                <span className="text-[0.7rem] mt-auto">JP</span>
-              </div>
-            </div>
 
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <div className="flex flex-row gap-1">
-                <span className="text-white">Instagram</span>
-                <span className="text-[0.7rem] mt-auto">JP</span>
-              </div>
-            </div>
-
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <div className="flex flex-row gap-1">
-                <span className="text-white">Twitter</span>
-                <span className="text-[0.7rem] mt-auto">JP</span>
-              </div>
-            </div>
-
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <span className="text-white">Bilibili TV</span>
-            </div>
-
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <span className="text-white">Crunchyroll</span>
-            </div>
-
-            <div className="flex flex-row gap-3">
-              <div className="aspect-square w-5 bg-white opacity-50"></div>
-              <span className="text-white">Netflix</span>
-            </div>
+            {externalLinks()}
           </div>
         </div>
 
@@ -294,12 +232,10 @@ const Info = () => {
 
           <div className="flex flex-col gap-5">
             <h2 className="text-white font-bold text-[1.2rem]">Recommended</h2>
-  
-            <div className="flex flex-row gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              {[...Array(10)].map((_, i) => (
-                <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
-              ))}
-            </div>
+
+            <SwipeCarousel
+              elements={seriesDisplay(10)}
+            />
           </div>
 
           <div className="flex flex-row">
