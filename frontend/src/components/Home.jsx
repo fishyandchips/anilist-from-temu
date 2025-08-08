@@ -27,20 +27,18 @@ const Home = () => {
     ));
   }
 
-  const showcaseSection = ({ heading, elements }) => {
-    return (
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="text-white font-bold text-[1.5rem]">{heading}</h1>
-          <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">
-            View all
-          </p>
-        </div>
-
-        <SwipeCarousel elements={elements}/>
+  const ShowcaseSection = ({ heading, elements }) => (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-row justify-between items-center">
+        <h1 className="text-white font-bold text-[1.5rem]">{heading}</h1>
+        <p className="text-white opacity-50 text-[1rem] hover:opacity-100 hover:cursor-pointer transition-all duration-300 ease-in-out">
+          View all
+        </p>
       </div>
-    );
-  }
+
+      <SwipeCarousel elements={elements}/>
+    </div>
+  );
 
   const yearsFrom1940 = () => {
     const yearsArray = [];
@@ -181,11 +179,11 @@ const Home = () => {
             )}
           </div>
 
-          {showcaseSection({ heading: "For you", elements: seriesDisplay(10) })}
-          {showcaseSection({ heading: "Trending Now", elements: seriesDisplay(10) })}
-          {showcaseSection({ heading: "Popular This Season", elements: seriesDisplay(10) })}
-          {showcaseSection({ heading: "Upcoming Next Season", elements: seriesDisplay(10) })}
-          {showcaseSection({ heading: "All Time Popular", elements: seriesDisplay(10) })}
+          <ShowcaseSection heading={"For you"} elements={seriesDisplay(10)} />
+          <ShowcaseSection heading={"Trending Now"} elements={seriesDisplay(10)} />
+          <ShowcaseSection heading={"Popular This Season"} elements={seriesDisplay(10)} />
+          <ShowcaseSection heading={"Upcoming Next Season"} elements={seriesDisplay(10)} />
+          <ShowcaseSection heading={"All Time Popular"} elements={seriesDisplay(10)} />
         </div>
       </div>
     </>

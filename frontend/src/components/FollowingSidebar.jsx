@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ListBulletIcon, HamburgerMenuIcon, CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
+import { HamburgerMenuIcon, CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
-import { FaSortDown, FaSortUp } from "react-icons/fa";
 
 import CustomToggle from './CustomToggle';
 import CustomLayoutToggle from './CustomLayoutToggle';

@@ -12,67 +12,84 @@ import {
 import NavBar from './NavBar';
 import FullListSidebar from './FullListSidebar';
 
-const animeListTable = (animes) => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableHead className="w-[50%] pl-5">Title</TableHead>
-        <TableHead className="text-center">Score</TableHead>
-        <TableHead className="text-center">Progress</TableHead>
-        <TableHead className="text-center">Type</TableHead>
-        <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
-      </TableHeader>
-      <TableBody className="text-white">
-        {animes.map((value, index) => (
-          <TableRow key={index} className="w-[50%]">
-            <TableCell className="flex flex-row items-center gap-5">
-              {value.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
-              {value.length < 15 && <div className="w-1 h-5 bg-[#FF7F7F] rounded-sm absolute left-1" />}
-              <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
-              <span>{value}</span>
-            </TableCell>
-            <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
-            <TableCell className="text-center">12/12</TableCell>
-            <TableCell className="text-center">TV</TableCell>
-            <TableCell className="text-center">2</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
+const animeData = [
+  { id: 1, title: "BOCCHI THE ROCK!" },
+  { id: 2, title: "DAN DA DAN" },
+  { id: 3, title: "Kaguya-sama: Love is War -Ultra Romantic-" },
+  { id: 4, title: "Your lie in April" },
+  { id: 5, title: "Assassination Classroom 2" },
+  { id: 6, title: "Kaguya-sama: Love is War?" },
+  { id: 7, title: "My Dress-Up Darling" },
+  { id: 8, title: "Rascal Does Not Dream of a Dreaming Girl" }
+];
 
-const mangaListTable = (manga) => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableHead className="w-[50%] pl-5">Title</TableHead>
-        <TableHead className="text-center">Score</TableHead>
-        <TableHead className="text-center">Chapters</TableHead>
-        <TableHead className="text-center">Volumes</TableHead>
-        <TableHead className="text-center">Type</TableHead>
-        <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
-      </TableHeader>
-      <TableBody className="text-white">
-        {manga.map((value, index) => (
-          <TableRow key={index} className="w-[50%]">
-            <TableCell className="flex flex-row items-center gap-5">
-              {value.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
-              {value.length < 15 && <div className="w-1 h-5 bg-[#FF7F7F] rounded-sm absolute left-1" />}
-              <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
-              <span>{value}</span>
-            </TableCell>
-            <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
-            <TableCell className="text-center">150/150</TableCell>
-            <TableCell className="text-center">8/8</TableCell>
-            <TableCell className="text-center">Manga</TableCell>
-            <TableCell className="text-center">2</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
+const plannedAnimeData = [
+  { id: 1, title: "A Certain Scientific Railgun" },
+  { id: 2, title: "BAKI" },
+  { id: 3, title: "Chainsaw Man - The Movie: Reze Arc" },
+  { id: 4, title: "Dr. STONE" },
+  { id: 5, title: "Higehiro: After Being Rejected, I Shaved And Took in a High School Runaway" },
+  { id: 6, title: "Komi Can't Communicate" },
+  { id: 7, title: "MASHLE: MAGIC AND MUSCLES" },
+]
+
+const AnimeListTable = ({ data }) => (
+  <Table>
+    <TableHeader>
+      <TableHead className="w-[50%] pl-5">Title</TableHead>
+      <TableHead className="text-center">Score</TableHead>
+      <TableHead className="text-center">Progress</TableHead>
+      <TableHead className="text-center">Type</TableHead>
+      <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
+    </TableHeader>
+    <TableBody className="text-white">
+      {data.map(({ id, title }) => (
+        <TableRow key={id} className="w-[50%]">
+          <TableCell className="flex flex-row items-center gap-5">
+            {title.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
+            {title.length < 15 && <div className="w-1 h-5 bg-[#FF7F7F] rounded-sm absolute left-1" />}
+            <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
+            <span>{title}</span>
+          </TableCell>
+          <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
+          <TableCell className="text-center">12/12</TableCell>
+          <TableCell className="text-center">TV</TableCell>
+          <TableCell className="text-center">2</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
+
+const MangaListTable = ({ data }) => (
+  <Table>
+    <TableHeader>
+      <TableHead className="w-[50%] pl-5">Title</TableHead>
+      <TableHead className="text-center">Score</TableHead>
+      <TableHead className="text-center">Chapters</TableHead>
+      <TableHead className="text-center">Volumes</TableHead>
+      <TableHead className="text-center">Type</TableHead>
+      <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
+    </TableHeader>
+    <TableBody className="text-white">
+      {data.map(({ id, title }) => (
+        <TableRow key={id} className="w-[50%]">
+          <TableCell className="flex flex-row items-center gap-5">
+            {title.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
+            {title.length < 15 && <div className="w-1 h-5 bg-[#FF7F7F] rounded-sm absolute left-1" />}
+            <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
+            <span>{title}</span>
+          </TableCell>
+          <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
+          <TableCell className="text-center">150/150</TableCell>
+          <TableCell className="text-center">8/8</TableCell>
+          <TableCell className="text-center">Manga</TableCell>
+          <TableCell className="text-center">2</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
 
 const FullList = ({ medium }) => { 
   const [list, setList] = useState("All");
@@ -82,27 +99,6 @@ const FullList = ({ medium }) => {
   const [country, setCountry] = useState("");
   const [sort, setSort] = useState("Score");
   const [display, setDisplay] = useState("List");
-
-  const animes = [
-    "BOCCHI THE ROCK!",
-    "DAN DA DAN",
-    "Kaguya-sama: Love is War -Ultra Romantic-",
-    "Your lie in April",
-    "Assassination Classroom 2",
-    "Kaguya-sama: Love is War?",
-    "My Dress-Up Darling",
-    "Rascal Does Not Dream of a Dreaming Girl"
-  ];
-
-  const plannedAnimes = [
-    "A Certain Scientific Railgun",
-    "BAKI",
-    "Chainsaw Man - The Movie: Reze Arc",
-    "Dr. STONE",
-    "Higehiro: After Being Rejected, I Shaved And Took in a High School Runaway",
-    "Komi Can't Communicate",
-    "MASHLE: MAGIC AND MUSCLES"
-  ];
 
   return (
     <>
@@ -131,15 +127,10 @@ const FullList = ({ medium }) => {
           {(list === "All" || list === "Completed") && (
             <div className="flex flex-col gap-2">
               <h1 className="text-white font-bold text-[2.5rem]">Completed</h1>
-              {medium === "anime" ? (
-                <>
-                  {animeListTable(animes)}
-                </>
-              ) : (
-                <>
-                  {mangaListTable(animes)}
-                </>
-              )}
+              {medium === "anime" ? 
+                <AnimeListTable data={animeData} /> :
+                <MangaListTable data={animeData} />
+              }
             </div>
           )}
 
@@ -148,12 +139,12 @@ const FullList = ({ medium }) => {
               {medium === "anime" ? (
                 <>
                   <h1 className="text-white font-bold text-[2.5rem]">Plan to Watch</h1>
-                  {animeListTable(plannedAnimes)}
+                  <AnimeListTable data={plannedAnimeData} />
                 </>
               ) : (
                 <>
                   <h1 className="text-white font-bold text-[2.5rem]">Plan to Read</h1>
-                  {mangaListTable(plannedAnimes)}
+                  <MangaListTable data={plannedAnimeData} />
                 </>
               )}
             </div>
