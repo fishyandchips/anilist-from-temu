@@ -4,6 +4,11 @@ import morgan from 'morgan';
 import cors from 'cors';
 import connectDB from './config';
 
+import {
+  ErrorObject
+} from './interface';
+import { echo } from './echo';
+
 dotenv.config();
 
 // Set up web app
@@ -21,6 +26,24 @@ const PORT: number = parseInt(process.env.PORT || '5000');
 const HOST: string = process.env.IP || '127.0.0.1';
 
 // ====================================================================
+
+function handleFunction(func: () => unknown, res: Response) {
+  try {
+    res.status(200).json(func());
+  } catch (error) {
+    const errorObj : ErrorObject = {
+      error: error instanceof Error ? error.message : String(error)
+    };
+    return res.status(400).json(errorObj);
+  }
+}
+
+// Example get request
+app.get('/echo', (req: Request, res: Response) => {
+  const value = req.query.value as string;
+
+  handleFunction(() => echo(value), res);
+});
 
 // ====================================================================
 
