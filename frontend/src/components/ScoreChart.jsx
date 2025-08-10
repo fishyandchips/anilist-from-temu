@@ -19,18 +19,18 @@ import {
 
 export const description = "A bar chart"
 
-const chartData = [
-  { score: "10", count: 346 },
-  { score: "20", count: 81 },
-  { score: "30", count: 173 },
-  { score: "40", count: 247 },
-  { score: "50", count: 775 },
-  { score: "60", count: 1540 },
-  { score: "70", count: 6260 },
-  { score: "80", count: 16667 },
-  { score: "90", count: 32568 },
-  { score: "100", count: 27565 },
-]
+// const chartData = [
+//   { score: "10", count: 346 },
+//   { score: "20", count: 81 },
+//   { score: "30", count: 173 },
+//   { score: "40", count: 247 },
+//   { score: "50", count: 775 },
+//   { score: "60", count: 1540 },
+//   { score: "70", count: 6260 },
+//   { score: "80", count: 16667 },
+//   { score: "90", count: 32568 },
+//   { score: "100", count: 27565 },
+// ]
 
 const chartConfig = {
   count: {
@@ -52,19 +52,20 @@ const barColors = [
   "#7FF6FF",
 ]
 
-export function ScoreChart() {
+export function ScoreChart({ data }) {
+  console.log(data);
   return (
     <Card className="bg-[#282828] border-0">
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-[25rem]">
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="score"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.toString().slice(0, 3)}
             />
             <YAxis
               axisLine={false}
@@ -74,8 +75,8 @@ export function ScoreChart() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" radius={9999} barSize={40}>
-              {chartData.map((entry, index) => (
+            <Bar dataKey="amount" radius={9999} barSize={40}>
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={barColors[index]} />
               ))}
             </Bar>

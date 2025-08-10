@@ -19,7 +19,6 @@ const Navbar = ({ currentPage }) => {
             <Link to="/home" className="text-[2.5rem] font-bold">A<span className="text-[#7FB6FF]">L</span></Link>
             <Link to="/animelist" className={`text-[1.1rem] ${currentPage === 'animeList' ? 'opacity-100' : 'opacity-70'} hover:opacity-100 transition-all duration-300 ease-in-out`}>Anime List</Link>
             <Link to="/mangalist" className={`text-[1.1rem] ${currentPage === 'mangaList' ? 'opacity-100' : 'opacity-70'} hover:opacity-100 transition-all duration-300 ease-in-out`}>Manga List</Link>
-            <Link to="/info" className={`text-[1.1rem] ${currentPage === 'info' ? 'opacity-100' : 'opacity-70'} hover:opacity-100 transition-all duration-300 ease-in-out`}>Info (temp, delete later)</Link>
           </div>
 
           <div className="flex items-center justify-center p-3">  

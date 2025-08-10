@@ -33,7 +33,7 @@ const Pages = () => {
         <Route path="/animelist" element={<FullList medium={"anime"} />} />
         <Route path="/mangalist" element={<FullList medium={"manga"} />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/info" element={<Info />} />
+        <Route path="/:medium/:id/:title" element={<Info />} />
         <Route path="/following" element={<Following />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>

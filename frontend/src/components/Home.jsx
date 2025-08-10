@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ListBulletIcon, HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { FaTags } from "react-icons/fa6";
+import axios from 'axios';
 
 import NavBar from './NavBar';
 import Sidebar from './Sidebar';
@@ -18,11 +21,226 @@ const Home = () => {
   const [sort, setSort] = useState("Average Score");
   const [display, setDisplay] = useState("List");
 
+  const [forYou, setForYou] = useState([]);
+  const [trendingNow, setTrendingNow] = useState([]);
+  const [popularThisSeason, setPopularThisSeason] = useState([]);
+  const [upcomingNextSeason, setUpcomingNextSeason] = useState([]);
+  const [allTimePopular, setAllTimePopular] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getForYou();
+    getTrendingNow();
+    getPopularThisSeason();
+    getUpcomingNextSeason();
+    getAllTimePopular();
+  }, []);
+
+  const getForYou = async () => {
+    const query = `
+    query Page($page: Int, $perPage: Int, $sort: [RecommendationSort]) {
+      Page(page: $page, perPage: $perPage) {
+        recommendations(sort: $sort) {
+          media {
+            id
+            title {
+              english
+              romaji
+            }
+            coverImage {
+              large
+            }
+            type
+          }
+        }
+      }
+    }
+    `;
+    const variables = {
+      page: 1,
+      perPage: 10,
+      sort: "RATING_DESC"
+    };
+
+    try {
+      const res = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables
+      });
+      console.log(res.data);
+      setForYou(res.data.data.Page.recommendations.map(recommendation => recommendation.media));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getTrendingNow = async () => {
+    const query = `
+    query Page($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType) {
+      Page(page: $page, perPage: $perPage) {
+        media(sort: $sort, type: $type) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            large
+          }
+          type
+        }
+      }
+    }
+    `;
+    const variables = {
+      page: 1,
+      perPage: 10,
+      sort: "TRENDING_DESC",
+      type: "ANIME"
+    };
+
+    try {
+      const res = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables
+      });
+      console.log(res.data);
+      setTrendingNow(res.data.data.Page.media);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getPopularThisSeason = async () => {
+    const query = `
+    query Page($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType, $season: MediaSeason, $seasonYear: Int) {
+      Page(page: $page, perPage: $perPage) {
+        media(sort: $sort, type: $type, season: $season, seasonYear: $seasonYear) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            large
+          }
+          type
+        }
+      }
+    }
+    `;
+    const variables = {
+      page: 1,
+      perPage: 10,
+      sort: "POPULARITY_DESC",
+      type: "ANIME",
+      season: "SUMMER",
+      seasonYear: 2025
+    };
+
+    try {
+      const res = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables
+      });
+      console.log(res.data);
+      setPopularThisSeason(res.data.data.Page.media);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getUpcomingNextSeason = async () => {
+    const query = `
+    query Page($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType, $season: MediaSeason, $seasonYear: Int) {
+      Page(page: $page, perPage: $perPage) {
+        media(sort: $sort, type: $type, season: $season, seasonYear: $seasonYear) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            large
+          }
+          type
+        }
+      }
+    }
+    `;
+    const variables = {
+      page: 1,
+      perPage: 10,
+      sort: "POPULARITY_DESC",
+      type: "ANIME",
+      season: "FALL",
+      seasonYear: 2025
+    };
+
+    try {
+      const res = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables
+      });
+      console.log(res.data);
+      setUpcomingNextSeason(res.data.data.Page.media);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getAllTimePopular = async () => {
+    const query = `
+    query Page($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType) {
+      Page(page: $page, perPage: $perPage) {
+        media(sort: $sort, type: $type) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            large
+          }
+          type
+        }
+      }
+    }
+    `;
+    const variables = {
+      page: 1,
+      perPage: 10,
+      sort: "POPULARITY_DESC",
+      type: "ANIME"
+    };
+
+    try {
+      const res = await axios.post('https://graphql.anilist.co', {
+        query,
+        variables
+      });
+      console.log(res.data);
+      setAllTimePopular(res.data.data.Page.media);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const seriesDisplay = (count) => {
     return [...Array(count)].map((_, i) => (
       <div key={i} className="flex flex-col gap-2">
-        <div className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0"></div>
-        <div className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0"></div>
+        <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
+        <Skeleton className="w-[60%] h-[1rem] bg-[#3C3C3C] rounded-md shrink-0" />
+      </div>
+    ));
+  }
+
+  const sectionDisplay = (section) => {
+    return section.map(({ id, title, coverImage, type }) => (
+      <div key={id} className="flex flex-col gap-2 cursor-pointer" onClick={() => navigate(`/${type.toLowerCase()}/${id}/${title.english ? title.english.replaceAll(' ', '-') : title.romaji.replaceAll(' ', '-')}`)}>
+        <div className="w-[12vw] h-[35vh] rounded-lg shrink-0 bg-cover bg-center" style={{backgroundImage: `url(${coverImage.large})`}}></div>
+        <h2 className="text-white text-[1rem]">{title.english ? title.english : title.romaji}</h2>
       </div>
     ));
   }
@@ -179,11 +397,11 @@ const Home = () => {
             )}
           </div>
 
-          <ShowcaseSection heading={"For you"} elements={seriesDisplay(10)} />
-          <ShowcaseSection heading={"Trending Now"} elements={seriesDisplay(10)} />
-          <ShowcaseSection heading={"Popular This Season"} elements={seriesDisplay(10)} />
-          <ShowcaseSection heading={"Upcoming Next Season"} elements={seriesDisplay(10)} />
-          <ShowcaseSection heading={"All Time Popular"} elements={seriesDisplay(10)} />
+          <ShowcaseSection heading={"For you"} elements={forYou.length !== 0 ? sectionDisplay(forYou) : seriesDisplay(10)} />
+          <ShowcaseSection heading={"Trending Now"} elements={trendingNow.length !== 0 ? sectionDisplay(trendingNow) : seriesDisplay(10)} />
+          <ShowcaseSection heading={"Popular This Season"} elements={popularThisSeason.length !== 0 ? sectionDisplay(popularThisSeason) : seriesDisplay(10)} />
+          <ShowcaseSection heading={"Upcoming Next Season"} elements={upcomingNextSeason.length !== 0 ? sectionDisplay(upcomingNextSeason) : seriesDisplay(10)} />
+          <ShowcaseSection heading={"All Time Popular"} elements={allTimePopular.length !== 0 ? sectionDisplay(allTimePopular) : seriesDisplay(10)} />
         </div>
       </div>
     </>
