@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 
-const RegisterStep1 = ({ nextStep, prevStep }) => {   
+const RegisterStep1 = ({ nextStep, prevStep }) => {
+  const { register, formState: { errors }} = useFormContext();
+
   return (
     <>
       <div className="text-white flex flex-col items-center w-screen h-screen">
@@ -23,7 +26,17 @@ const RegisterStep1 = ({ nextStep, prevStep }) => {
         <div className="flex flex-col gap-[1.5rem] w-[33%] h-full items-center justify-center">
           <div className="grid w-full items-center gap-3">
             <Label htmlFor="username">Username</Label>
-            <Input type="username" id="username" />
+            <Input 
+              {...register("username", {
+                required: "Username is required"
+              })}
+              type="username" 
+              id="username" 
+              className={errors.username ? "border-[#FF7F7F]" : ""}
+            />
+            {errors.username && (
+              <p className="text-[#FF7F7F] text-[0.8rem]">{errors.username.message}</p>
+            )}
           </div>
 
           <div className="flex items-center justify-center gap-2 md:flex-row w-full">
@@ -34,7 +47,7 @@ const RegisterStep1 = ({ nextStep, prevStep }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default RegisterStep1

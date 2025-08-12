@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-const RegisterStep3 = ({ prevStep }) => {
-  const navigate = useNavigate();
+const RegisterStep3 = ({ prevStep, onSubmit }) => {
+  const { handleSubmit, watch, setValue } = useFormContext();
 
   const genres = [
     "Action", 
@@ -27,6 +28,16 @@ const RegisterStep3 = ({ prevStep }) => {
     "Thriller"
   ];
 
+  let selectedGenres = watch("genres", []);
+
+  const toggleGenre = (genre) => {
+    if (selectedGenres.includes(genre)) {
+      setValue("genres", selectedGenres.filter(g => g !== genre));
+    } else {
+      setValue("genres", [...selectedGenres, genre]);
+    }
+  };
+
   return (
     <>
       <div className="text-white flex flex-col items-center w-screen h-screen">
@@ -45,7 +56,13 @@ const RegisterStep3 = ({ prevStep }) => {
         <div className="flex flex-col gap-[3rem] w-[33%] h-full items-center justify-center">
           <div className="flex flex-row flex-wrap justify-center gap-4 w-full">
             {genres.map((value, index) => (
-              <Button key={index} variant="outlined" className="relative rounded-full w-[30%]">
+              <Button 
+                key={index} 
+                variant="outlined" 
+                type="button"
+                onClick={() => toggleGenre(value)}
+                className={`relative rounded-full w-[30%] ${selectedGenres.includes(value) && "bg-secondary text-secondary-foreground border-secondary"}`}
+              >
                 {value}
               </Button>
             ))}
@@ -53,13 +70,13 @@ const RegisterStep3 = ({ prevStep }) => {
           
           <div className="w-full flex flex-col gap-[1rem]">
             <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-              <Button variant="outlinedMain" className="relative font-bold rounded-full w-full" onClick={() => navigate('/home')}>
+              <Button variant="outlinedMain" className="relative font-bold rounded-full w-full" onClick={handleSubmit(onSubmit)}>
                 Skip for now
               </Button>
             </div>
 
             <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-              <Button className="relative font-bold rounded-full w-full" onClick={() => navigate('/home')}>
+              <Button className="relative font-bold rounded-full w-full" onClick={handleSubmit(onSubmit)}>
                 Sign up
               </Button>
             </div>
@@ -67,7 +84,7 @@ const RegisterStep3 = ({ prevStep }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default RegisterStep3

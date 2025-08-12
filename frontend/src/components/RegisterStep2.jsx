@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,10 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import { FaCircleCheck } from "react-icons/fa6";
 
-const RegisterStep2 = ({ nextStep, prevStep }) => {  
+const RegisterStep2 = ({ nextStep, prevStep }) => {
+  const { register, getValues, watch, formState: { errors }} = useFormContext();
+  const password = watch("password");
+
   return (
     <>
       <div className="text-white flex flex-col items-center w-screen h-screen">
@@ -24,26 +28,78 @@ const RegisterStep2 = ({ nextStep, prevStep }) => {
         <div className="flex flex-col gap-[1.5rem] w-[33%] h-full items-center justify-center">
           <div className="grid w-full items-center gap-3">
             <Label htmlFor="password">Password</Label>
-            <Input type="password" id="password"></Input>
+            <Input 
+              {...register("password", {
+                validate: (value) => {
+                  if (!/[a-zA-Z]/.test(value)) {
+                    return "Password must contain at least 1 letter";
+                  }
+
+                  if (!/[^a-zA-Z]/.test(value)) {
+                    return "Password must contain at least 1 number/special character";
+                  }
+
+                  if (value.length < 10) {
+                    return "Password must be at least 10 characters long";
+                  }
+
+                  return true;
+                }
+              })}
+              type="password" 
+              id="password"
+              className={errors.password ? "border-[#FF7F7F]" : ""}
+            />
+            {errors.password && (
+              <p className="text-[#FF7F7F] text-[0.8rem]">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="grid w-full items-center gap-3">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input type="confirm-password" id="confirm-password" />
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input 
+              {...register("confirmPassword", {
+                validate: (value) => {
+                  if (value !== getValues("password")) {
+                    return "Passwords do not match";
+                  }
+
+                  return true;
+                }
+              })}
+              type="password" 
+              id="confirmPassword"
+              className={errors.confirmPassword ? "border-[#FF7F7F]" : ""}
+            />
+            {errors.confirmPassword && (
+              <p className="text-[#FF7F7F] text-[0.8rem]">{errors.confirmPassword.message}</p>
+            )}
           </div>
 
           <div className="w-full">
             <h3 className="font-bold mb-2">Your password must contain at least:</h3>
             <ul className="flex flex-row items-center gap-3 p-2.5 ml-2">
-              <FaCircleCheck style={{ color: '#81FFBA' }} className="w-5 h-5"/>
+              {/[a-zA-Z]/.test(password) ? (
+                <FaCircleCheck style={{ color: '#81FFBA' }} className="w-5 h-5"/>
+              ) : (
+                <div className="w-5 h-5 rounded-full border-2 border-white border-opacity-50"></div>
+              )}
               1 letter
             </ul>
             <ul className="flex flex-row items-center gap-3 p-2.5 ml-2">
-              <div className="w-5 h-5 rounded-full border-2 border-white border-opacity-50"></div>
+              {/[^a-zA-Z]/.test(password) ? (
+                <FaCircleCheck style={{ color: '#81FFBA' }} className="w-5 h-5"/>
+              ) : (
+                <div className="w-5 h-5 rounded-full border-2 border-white border-opacity-50"></div>
+              )}
               1 number/special character
             </ul>
             <ul className="flex flex-row items-center gap-3 p-2.5 ml-2">
-              <div className="w-5 h-5 rounded-full border-2 border-white border-opacity-50"></div>
+              {password && password.length >= 10 ? (
+                <FaCircleCheck style={{ color: '#81FFBA' }} className="w-5 h-5"/>
+              ) : (
+                <div className="w-5 h-5 rounded-full border-2 border-white border-opacity-50"></div>
+              )}
               10 characters
             </ul>
           </div>
@@ -56,7 +112,7 @@ const RegisterStep2 = ({ nextStep, prevStep }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default RegisterStep2

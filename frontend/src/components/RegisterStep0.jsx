@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,9 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 
-const RegisterStep0 = ({ nextStep }) => {  
+const RegisterStep0 = ({ nextStep }) => {
+  const { register, formState: { errors }} = useFormContext();
+
   return (
     <>
       <div className="text-white flex flex-col gap-[3rem] items-center justify-center w-screen h-screen">
@@ -15,7 +18,22 @@ const RegisterStep0 = ({ nextStep }) => {
         <div className="flex flex-col gap-[1.5rem] w-[33%] items-center justify-center">
           <div className="grid w-full items-center gap-3">
             <Label htmlFor="email">Email Address</Label>
-            <Input type="email" id="email" placeholder="example@email.com" />
+            <Input 
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email address"
+                }
+              })}
+              type="email" 
+              id="email" 
+              placeholder="example@email.com" 
+              className={errors.email ? "border-[#FF7F7F]" : ""}
+            />
+            {errors.email && (
+              <p className="text-[#FF7F7F] text-[0.8rem]">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="flex items-center justify-center gap-2 md:flex-row w-full">
@@ -43,7 +61,7 @@ const RegisterStep0 = ({ nextStep }) => {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default RegisterStep0
