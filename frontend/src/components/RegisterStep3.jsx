@@ -70,7 +70,7 @@ const RegisterStep3 = ({ prevStep, onSubmit }) => {
           
           <div className="w-full flex flex-col gap-[1rem]">
             <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-              <Button variant="outlinedMain" className="relative font-bold rounded-full w-full" onClick={handleSubmit(onSubmit)}>
+              <Button variant="outlinedMain" className="relative font-bold rounded-full w-full" onClick={() => { setValue("genres", []); handleSubmit(onSubmit); }}>
                 Skip for now
               </Button>
             </div>

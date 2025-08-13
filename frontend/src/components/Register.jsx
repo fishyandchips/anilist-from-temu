@@ -37,13 +37,32 @@ const Register = () => {
   const prevStep = () => setStep((prev) => prev - 1);
 
   const onSubmit = async ({ email, username, password, confirmPassword, genres }) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password
     });
 
-    if (error) {
-      alert("Signup error: ", error.message);
+    if (signUpError) {
+      alert(`Signup error: ${signUpError.message}`);
+      return;
+    }
+
+    const userId = signUpData.user?.id;
+    if (!userId) {
+      alert("Could not get userId from signup.");
+      return;
+    }
+
+    const { error: profileError } = await supabase
+      .from("profile")
+      .upsert({
+        id: userId,
+        username,
+        genre_preferences: genres,
+      }, { onConflict: 'id' })
+
+    if (profileError) {
+      alert(`Profile error: ${profileError.message}`);
       return;
     }
 

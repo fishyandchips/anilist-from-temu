@@ -7,9 +7,21 @@ import {
 import { PersonIcon, GearIcon, ExitIcon } from "@radix-ui/react-icons";
 import { MdOutlinePeople } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import supabase from '@/config/supabaseClient';
 
 const Navbar = ({ currentPage }) => {  
   const navigate = useNavigate();
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      alert(`Signout error: ${error.message}`);
+      return;
+    }
+
+    navigate('/register');
+  }
   
   return (
     <>
@@ -42,7 +54,7 @@ const Navbar = ({ currentPage }) => {
                   <span className="text-[1.1rem]">Settings</span>
                 </div>
 
-                <Button className="relative font-bold rounded-full w-full" onClick={() => navigate('/register')}>
+                <Button className="relative font-bold rounded-full w-full" onClick={signOut}>
                   Log out <ExitIcon className="w-5 h-5" />
                 </Button>
               </PopoverContent>
