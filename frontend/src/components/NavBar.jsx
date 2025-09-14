@@ -7,10 +7,12 @@ import {
 import { PersonIcon, GearIcon, ExitIcon } from "@radix-ui/react-icons";
 import { MdOutlinePeople } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
 import supabase from '@/config/supabaseClient';
 
 const Navbar = ({ currentPage }) => {  
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState(null);
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -22,6 +24,30 @@ const Navbar = ({ currentPage }) => {
 
     navigate('/register');
   }
+
+  const getAvatar = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
+
+    const { data, error } = await supabase
+      .from("profile")
+      .select("avatar")
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      alert(`Error: ${error.message}`);
+      return;
+    }
+
+    setAvatar(data.avatar);
+
+    console.log(data);
+  }
+
+  useEffect(() => {
+    getAvatar();
+  }, []);
   
   return (
     <>
@@ -36,7 +62,7 @@ const Navbar = ({ currentPage }) => {
           <div className="flex items-center justify-center p-3">  
             <Popover>
               <PopoverTrigger>
-                <div className="w-12 h-12 rounded-full border-2 border-white hover:cursor-pointer"></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white hover:cursor-pointer aspect-square bg-cover bg-center" style={{backgroundImage: avatar && `url(${avatar})`}}></div>
               </PopoverTrigger>
               <PopoverContent className="flex flex-col gap-2 bg-white border-0">
                 <div className="flex flex-row items-center gap-5 hover:bg-accent p-2 rounded-md cursor-pointer" onClick={() => navigate('/profile')}>

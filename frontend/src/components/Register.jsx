@@ -66,6 +66,21 @@ const Register = () => {
       return;
     }
 
+    const { error: listError } = await supabase
+      .from("lists")
+      .upsert([{
+        user_id: userId,
+        name: "anime"
+      }, {
+        user_id: userId,
+        name: "manga"
+      }], { onConflict: 'id' })
+
+    if (listError) {
+      alert(`Error creating lists: ${listError.message}`);
+      return;
+    }
+
     navigate('/home');
   }
 

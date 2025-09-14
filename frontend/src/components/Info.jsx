@@ -226,12 +226,9 @@ const Info = () => {
           {/* <Skeleton className="w-[13.5rem] h-[19rem] bg-[#999999] rounded-lg" /> */}
           <div className="mt-5 w-full flex flex-row justify-center items-center gap-5">
             <div className="flex flex-row">
-              <div className="bg-[#7FC3FF] w-[7.5rem] h-[2.5rem] rounded-tl-full rounded-bl-full border-r border-[#282828] flex justify-center items-center cursor-pointer">
-                <span className="text-black text-[1rem]">+ Add to List</span>
-              </div>
-              <div className="bg-[#7FC3FF] w-[2.5rem] h-[2.5rem] rounded-tr-full rounded-br-full flex justify-center items-center cursor-pointer">
-                <ChevronDownIcon className="text-black h-[1rem] w-[1rem]"/>
-              </div>
+              <Button className="relative font-bold rounded-full w-[10rem]">
+                <span className="text-black font-normal text-[1rem]">+ Add to List</span>
+              </Button>
             </div>
             <HeartIcon className="text-white w-[2rem] h-[2rem] cursor-pointer"/>
           </div>

@@ -103,8 +103,9 @@ const ProfileSettings = ({ profile, setProfile, updateProfile }) => {
             {Object.entries(PROFILE_COLOR_MAP).map(([name, hex]) => (
               <div 
                 key={name} 
-                className={`aspect-square w-[4rem] rounded-lg bg-[${hex}] cursor-pointer 
-                ${profile.profile_color === name && "border border-4 border-[#FFFFFF]"}`} 
+                className={`aspect-square w-[4rem] rounded-lg cursor-pointer 
+                ${profile.profile_color === name && "border border-4 border-[#FFFFFF]"}`}
+                style={{ backgroundColor: hex }} 
                 onClick={() => updateProfile({ profile_color: name })}
               />
             ))}
@@ -120,11 +121,12 @@ const ProfileSettings = ({ profile, setProfile, updateProfile }) => {
             {Object.entries(SITE_THEME_MAP).map(([name, colors]) => (
               <div 
                 key={name}
-                className={`aspect-square w-[3.5rem] rounded-lg bg-[${colors.bg}] text-[${colors.text}] 
+                className={`aspect-square w-[3.5rem] rounded-lg
                 cursor-pointer box-border relative
                 ${profile.site_theme === name && "border-4 border-[#7FC3FF]"}`}
                 style={{
-                  background: name === "system" && `linear-gradient(45deg, ${colors.bg} 50%, ${colors.text} 50%)`
+                  color: colors.text,
+                  background: name === "system" ? `linear-gradient(45deg, ${colors.bg} 50%, ${colors.text} 50%)` : colors.bg
                 }}
                 onClick={() => updateProfile({ site_theme: name })}
               >
@@ -162,7 +164,7 @@ const ProfileSettings = ({ profile, setProfile, updateProfile }) => {
 
           <div className="flex flex-row gap-5 items-center w-[70%]">
             {profile.avatar ? (
-              <div className="aspect-square w-[13rem] bg-cover bg-center" style={{backgroundImage: `url(${profile.avatar})`}} />
+              <div className="aspect-square w-[13rem] bg-cover bg-center rounded-sm" style={{backgroundImage: `url(${profile.avatar})`}} />
             ) : (
               <Skeleton className="aspect-square w-[13rem] bg-[#3C3C3C]"/>
             )}
