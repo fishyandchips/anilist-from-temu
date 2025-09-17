@@ -5,6 +5,7 @@ import { StarFilledIcon, HeartIcon, HeartFilledIcon, ChevronDownIcon, Link2Icon 
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScoreChart } from './ScoreChart';
 import axios from 'axios';
+import supabase from '@/config/supabaseClient';
 
 import NavBar from './NavBar';
 import SwipeCarousel from './SwipeCarousel';
@@ -200,6 +201,26 @@ const Info = () => {
     }
   }
 
+  const addToList = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
+
+    const { error } = await supabase
+      .from("list_items")
+      .upsert({
+        series_id: id,
+        user_id: userId,
+        type: medium,
+        title,
+        status: medium === 'anime' ? 'Plan to Watch' : 'Plan to Read'
+      }, { onConflict: ["user_id", "series_id", "type"] })
+
+    if (error) {
+      alert(`Error adding to list: ${error.message}`);
+      return;
+    }
+  }
+
   const seriesDisplay = (count) => {
     return [...Array(count)].map((_, i) => (
       <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
@@ -226,7 +247,7 @@ const Info = () => {
           {/* <Skeleton className="w-[13.5rem] h-[19rem] bg-[#999999] rounded-lg" /> */}
           <div className="mt-5 w-full flex flex-row justify-center items-center gap-5">
             <div className="flex flex-row">
-              <Button className="relative font-bold rounded-full w-[10rem]">
+              <Button className="relative font-bold rounded-full w-[10rem]" onClick={() => addToList(medium, id, title)}>
                 <span className="text-black font-normal text-[1rem]">+ Add to List</span>
               </Button>
             </div>

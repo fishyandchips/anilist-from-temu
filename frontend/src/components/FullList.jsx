@@ -8,30 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import supabase from '@/config/supabaseClient';
 
 import NavBar from './NavBar';
 import FullListSidebar from './FullListSidebar';
 
-const animeData = [
-  { id: 1, title: "BOCCHI THE ROCK!" },
-  { id: 2, title: "DAN DA DAN" },
-  { id: 3, title: "Kaguya-sama: Love is War -Ultra Romantic-" },
-  { id: 4, title: "Your lie in April" },
-  { id: 5, title: "Assassination Classroom 2" },
-  { id: 6, title: "Kaguya-sama: Love is War?" },
-  { id: 7, title: "My Dress-Up Darling" },
-  { id: 8, title: "Rascal Does Not Dream of a Dreaming Girl" }
-];
-
-const plannedAnimeData = [
-  { id: 1, title: "A Certain Scientific Railgun" },
-  { id: 2, title: "BAKI" },
-  { id: 3, title: "Chainsaw Man - The Movie: Reze Arc" },
-  { id: 4, title: "Dr. STONE" },
-  { id: 5, title: "Higehiro: After Being Rejected, I Shaved And Took in a High School Runaway" },
-  { id: 6, title: "Komi Can't Communicate" },
-  { id: 7, title: "MASHLE: MAGIC AND MUSCLES" },
-]
 
 const AnimeListTable = ({ data }) => (
   <Table>
@@ -43,7 +24,7 @@ const AnimeListTable = ({ data }) => (
       <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
     </TableHeader>
     <TableBody className="text-white">
-      {data.map(({ id, title }) => (
+      {data.map(({ id, created_at, updated_at, finished_at, series_id, title, user_id, type, status, rating, progress, re_count }) => (
         <TableRow key={id} className="w-[50%]">
           <TableCell className="flex flex-row items-center gap-5">
             {title.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
@@ -51,10 +32,10 @@ const AnimeListTable = ({ data }) => (
             <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
             <span>{title}</span>
           </TableCell>
-          <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
-          <TableCell className="text-center">12/12</TableCell>
-          <TableCell className="text-center">TV</TableCell>
-          <TableCell className="text-center">2</TableCell>
+          <TableCell className="text-center">{rating}</TableCell>
+          <TableCell className="text-center">{progress}</TableCell>
+          <TableCell className="text-center">{type}</TableCell>
+          <TableCell className="text-center">{re_count}</TableCell>
         </TableRow>
       ))}
     </TableBody>
@@ -72,7 +53,7 @@ const MangaListTable = ({ data }) => (
       <TableHead className="flex flex-row items-center justify-center"><ReloadIcon /></TableHead>
     </TableHeader>
     <TableBody className="text-white">
-      {data.map(({ id, title }) => (
+      {data.map(({ id, created_at, updated_at, finished_at, series_id, title, user_id, type, status, rating, progress, re_count }) => (
         <TableRow key={id} className="w-[50%]">
           <TableCell className="flex flex-row items-center gap-5">
             {title.length > 30 && <div className="w-1 h-5 bg-[#7FFFAE] rounded-sm absolute left-1" />}
@@ -80,11 +61,11 @@ const MangaListTable = ({ data }) => (
             <div className="ml-2 w-10 h-10 bg-[#3C3C3C] rounded-sm hover:cursor-pointer flex-shrink-0" />
             <span>{title}</span>
           </TableCell>
-          <TableCell className="text-center">{Math.floor(Math.random() * 10) + 1}</TableCell>
+          <TableCell className="text-center">{rating}</TableCell>
           <TableCell className="text-center">150/150</TableCell>
           <TableCell className="text-center">8/8</TableCell>
-          <TableCell className="text-center">Manga</TableCell>
-          <TableCell className="text-center">2</TableCell>
+          <TableCell className="text-center">{type}</TableCell>
+          <TableCell className="text-center">{re_count}</TableCell>
         </TableRow>
       ))}
     </TableBody>
@@ -99,6 +80,45 @@ const FullList = ({ medium }) => {
   const [country, setCountry] = useState("");
   const [sort, setSort] = useState("Score");
   const [display, setDisplay] = useState("List");
+  const [listData, setListData] = useState([{
+    id: null,
+    created_at: null,
+    updated_at: null,
+    finished_at: null,
+    series_id: null,
+    title: "",
+    user_id: null,
+    type: null,
+    status: null,
+    rating: null,
+    progress: null,
+    re_count: null
+  }]);
+
+  const fetchData = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
+
+    const { data, error } = await supabase
+      .from("list_items")
+      .select("*")
+      .eq('user_id', userId)
+      .eq("type", medium)
+    ;
+
+    if (error) {
+      alert(`Error fetching data: ${error.message}`);
+      return;
+    }
+
+    console.log(data);
+
+    setListData(data);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [medium]);
 
   return (
     <>
@@ -128,8 +148,8 @@ const FullList = ({ medium }) => {
             <div className="flex flex-col gap-2">
               <h1 className="text-white font-bold text-[2.5rem]">Completed</h1>
               {medium === "anime" ? 
-                <AnimeListTable data={animeData} /> :
-                <MangaListTable data={animeData} />
+                <AnimeListTable data={listData.filter(data => data.status === "Completed")} /> :
+                <MangaListTable data={listData.filter(data => data.status === "Completed")} />
               }
             </div>
           )}
@@ -139,12 +159,12 @@ const FullList = ({ medium }) => {
               {medium === "anime" ? (
                 <>
                   <h1 className="text-white font-bold text-[2.5rem]">Plan to Watch</h1>
-                  <AnimeListTable data={plannedAnimeData} />
+                  <AnimeListTable data={listData.filter(data => data.status === "Plan to Watch")} />
                 </>
               ) : (
                 <>
                   <h1 className="text-white font-bold text-[2.5rem]">Plan to Read</h1>
-                  <MangaListTable data={plannedAnimeData} />
+                  <MangaListTable data={listData.filter(data => data.status === "Plan to Read")} />
                 </>
               )}
             </div>
