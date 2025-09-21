@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
-import NavBar from './NavBar';
+import NavBar from '../main/NavBar';
 import FollowingSidebar from './FollowingSidebar';
 
 const followingData = [

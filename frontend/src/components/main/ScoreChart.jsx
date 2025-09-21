@@ -1,15 +1,10 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from "recharts"
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
   ChartContainer,
@@ -18,19 +13,6 @@ import {
 } from "@/components/ui/chart"
 
 export const description = "A bar chart"
-
-// const chartData = [
-//   { score: "10", count: 346 },
-//   { score: "20", count: 81 },
-//   { score: "30", count: 173 },
-//   { score: "40", count: 247 },
-//   { score: "50", count: 775 },
-//   { score: "60", count: 1540 },
-//   { score: "70", count: 6260 },
-//   { score: "80", count: 16667 },
-//   { score: "90", count: 32568 },
-//   { score: "100", count: 27565 },
-// ]
 
 const chartConfig = {
   count: {
@@ -53,7 +35,6 @@ const barColors = [
 ]
 
 export function ScoreChart({ data }) {
-  console.log(data);
   return (
     <Card className="bg-[#282828] border-0">
       <CardContent>

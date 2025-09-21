@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useForm, FormProvider } from 'react-hook-form';
-import supabase from '@/config/supabaseClient';
+import { useForm } from 'react-hook-form';
+import { signIn } from '../api/auth';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,17 +20,12 @@ const Login = () => {
   });
 
   const onSubmit = async ({ email, password }) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert(`Login error: ${error.message}`);
-      return;
+    try {
+      await signIn({ email, password });
+      navigate('/home');
+    } catch (err) {
+      alert(`Signin failed: ${err.message}`);
     }
-
-    navigate('/home');
   }
 
   return (
@@ -80,7 +75,9 @@ const Login = () => {
               </Button>
             </div>
 
-            <Link to="/register" className="text-white underline underline-offset-2 hover:text-white/80 transition-all duration-300 ease-in-out">Forgot your password?</Link>
+            <Link to="/register" className="text-white underline underline-offset-2 hover:text-white/80 transition-all duration-300 ease-in-out">
+              Forgot your password?
+            </Link>
 
             <div className="relative w-[90%] flex justify-center items-center">
               <div className="absolute top-[50%] w-full border-b-2 border-white"></div>
@@ -88,7 +85,7 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-              <Button variant="outlined" className="relative font-bold rounded-full w-full">
+              <Button variant="outlined" disabled={true} className="relative font-bold rounded-full w-full">
                 <FcGoogle className="mr-1" />
                 Continue with Google
               </Button>
@@ -96,7 +93,9 @@ const Login = () => {
 
             <div>
               <span className="opacity-50">Don't have an account? </span>
-              <Link to="/register" className="text-white underline underline-offset-2 hover:text-white/80 transition-all duration-300 ease-in-out">Create one here.</Link>
+              <Link to="/register" className="text-white underline underline-offset-2 hover:text-white/80 transition-all duration-300 ease-in-out">
+                Create one here.
+              </Link>
             </div>
           </div>
         </div>

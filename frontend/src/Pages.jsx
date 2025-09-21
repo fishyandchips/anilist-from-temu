@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Register from './components/Register';
-import Login from './components/Login';
-import Home from './components/Home';
-import FullList from './components/FullList';
-import Profile from './components/Profile';
-import Info from './components/Info';
-import Following from './components/Following';
-import Settings from './components/Settings';
+import Register from './components/auth/Register';
+import Login from './components/auth/Login';
+import Home from './components/main/Home';
+import FullList from './components/lists/FullList';
+import Profile from './components/profile/Profile';
+import Info from './components/main/Info';
+import Following from './components/profile/Following';
+import Settings from './components/profile/Settings';
 
 import './App.css';
 

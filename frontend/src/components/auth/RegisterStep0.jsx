@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,7 +47,7 @@ const RegisterStep0 = ({ nextStep }) => {
           </div>
 
           <div className="flex items-center justify-center gap-2 md:flex-row w-full">
-            <Button variant="outlined" className="relative font-bold rounded-full w-full">
+            <Button variant="outlined" disabled={true} className="relative font-bold rounded-full w-full">
               <FcGoogle className="mr-1" />
               Continue with Google
             </Button>

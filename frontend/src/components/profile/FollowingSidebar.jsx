@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { HamburgerMenuIcon, CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
 
-import CustomToggle from './CustomToggle';
-import CustomLayoutToggle from './CustomLayoutToggle';
-import CustomSelect from './CustomSelect';
+import CustomToggle from '../CustomToggle';
+import CustomLayoutToggle from '../CustomLayoutToggle';
+import CustomSelect from '../CustomSelect';
 
 const FollowingSidebar = ({
   followStatus, setFollowStatus,

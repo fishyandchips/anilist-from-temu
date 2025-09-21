@@ -4,202 +4,79 @@ import { Button } from "@/components/ui/button";
 import { StarFilledIcon, HeartIcon, HeartFilledIcon, ChevronDownIcon, Link2Icon } from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScoreChart } from './ScoreChart';
-import axios from 'axios';
 import supabase from '@/config/supabaseClient';
 
 import NavBar from './NavBar';
-import SwipeCarousel from './SwipeCarousel';
+import SwipeCarousel from '../SwipeCarousel';
+
+import { useAtom } from 'jotai';
+import { visitedAtom } from "@/atoms/visitedAtom";
+import { fetchSeriesData } from '../api/info';
 
 const Info = () => { 
-  const { medium, id, title } = useParams();
-  const [header, setHeader] = useState(null);
+  const { medium, id } = useParams();
   const [fullDescription, setFullDescription] = useState(false);
   const [showSpoilerTags, setShowSpoilerTags] = useState(false);
-  const [metadata, setMetadata] = useState(null);
-  const [tags, setTags] = useState(null);
-  const [externalLinks, setExternalLinks] = useState(null);
-  const [characters, setCharacters] = useState(null);
-  const [staff, setStaff] = useState(null);
-  const [recommended, setRecommended] = useState(null);
-  const [trailer, setTrailer] = useState(null);
-  const [stats, setStats] = useState(null);
+
+  const [visited, setVisited] = useAtom(visitedAtom);
+  const [series, setSeries] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     setFullDescription(false);
     setShowSpoilerTags(false);
-    getSeriesData();
-  }, [id]);
 
-  const getSeriesData = async () => {
-    const query = `
-    query Page($mediaId: Int, $page: Int, $perPage: Int, $sort: [CharacterSort], $staffPage2: Int, $staffPerPage2: Int, $staffSort2: [StaffSort], $asHtml: Boolean, $language: StaffLanguage, $voiceActorsSort2: [StaffSort], $recommendationsSort2: [RecommendationSort], $recommendationsPage2: Int, $recommendationsPerPage2: Int) {
-      Media(id: $mediaId) {
-        format
-        episodes
-        duration
-        status
-        startDate {
-          day
-          month
-          year
-        }
-        endDate {
-          day
-          month
-          year
-        }
-        season
-        seasonYear
-        favourites
-        title {
-          english
-          native
-          romaji
-        }
-        tags {
-          isGeneralSpoiler
-          rank
-          name
-        }
-        externalLinks {
-          icon
-          site
-          url
-          language
-          color
-        }
-        genres
-        bannerImage
-        coverImage {
-          extraLarge
-        }
-        description(asHtml: $asHtml)
-        characters(page: $page, perPage: $perPage, sort: $sort) {
-          edges {
-            name
-            node {
-              image {
-                large
-              }
-              name {
-                full
-              }
-            }
-            role
-            voiceActors(language: $language, sort: $voiceActorsSort2) {
-              image {
-                large
-              }
-              languageV2
-              name {
-                full
-              }
-            }
-          }
-        }
-        staff(page: $staffPage2, perPage: $staffPerPage2, sort: $staffSort2) {
-          edges {
-            node {
-              image {
-                large
-              }
-              name {
-                full
-              }
-            }
-            role
-          }
-        }
-        trailer {
-          id
-        }
-        averageScore
-        popularity
-        rankings {
-          rank
-          type
-          allTime
-        }
-        stats {
-          scoreDistribution {
-            amount
-            score
-          }
-        }
-        recommendations(sort: $recommendationsSort2, page: $recommendationsPage2, perPage: $recommendationsPerPage2) {
-          nodes {
-            mediaRecommendation {
-              coverImage {
-                extraLarge
-              }
-              title {
-                english
-                romaji
-              }
-              type
-              id
-            }
-          }
-        }
+    const handleFetch = async () => {
+      if (visited.has(id)) {
+        setSeries(visited.get(id));
+        return;
       }
-    }
-    `;
-    const variables = {
-      mediaId: id,
-      page: 1,
-      perPage: 6,
-      sort: "ID",
-      language: "JAPANESE",
-      staffPage2: 1,
-      staffPerPage2: 6,
-      staffSort2: "RELEVANCE",
-      asHtml: false,
-      voiceActorRolesSort2: "RELEVANCE",
-      recommendationsSort2: "RATING_DESC",
-      recommendationsPage2: 1,
-      recommendationsPerPage2: 10
+
+      try {
+        const series = await fetchSeriesData(id);
+        setVisited(prev => new Map(prev).set(id, series));
+        setSeries(series);
+      } catch (err) {
+        alert(err.message);
+      }
     };
 
-    try {
-      const res = await axios.post('https://graphql.anilist.co', {
-        query,
-        variables
-      });
-      console.log(res.data);
-      const { 
-        title, 
-        tags, 
-        externalLinks, 
-        genres, 
-        bannerImage,
-        coverImage,
-        description,
-        averageScore,
-        popularity,
-        characters,
-        staff,
-        trailer,
-        rankings,
-        stats,
-        recommendations,
-        ...rest 
-      } = res.data.data.Media;
+    handleFetch();
+  }, [setFullDescription, setShowSpoilerTags, id, visited, setVisited]);
 
-      setHeader({ title, genres, bannerImage, coverImage, description, averageScore, popularity, rankings });
-      setMetadata({ title, ...rest });
-      setTags(tags);
-      setExternalLinks(externalLinks);
-      setCharacters(characters);
-      setStaff(staff);
-      setRecommended(recommendations);
-      setTrailer(trailer);
-      setStats(stats);
-    } catch (error) {
-      console.error(error);
-    }
+  if (!series) {
+    return (
+      <NavBar />
+    );
   }
+
+  let { 
+    title, 
+    tags, 
+    externalLinks, 
+    genres, 
+    bannerImage,
+    coverImage,
+    description,
+    averageScore,
+    popularity,
+    characters,
+    staff,
+    trailer,
+    rankings,
+    stats,
+    recommendations,
+    format, 
+    episodes, 
+    duration, 
+    status, 
+    startDate, 
+    endDate, 
+    season, 
+    seasonYear, 
+    favourites
+  } = series;
 
   const addToList = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -210,10 +87,9 @@ const Info = () => {
       .upsert({
         series_id: id,
         user_id: userId,
-        type: medium,
-        title,
+        medium,
         status: medium === 'anime' ? 'Plan to Watch' : 'Plan to Read'
-      }, { onConflict: ["user_id", "series_id", "type"] })
+      }, { onConflict: ["user_id", "series_id", "medium"] })
 
     if (error) {
       alert(`Error adding to list: ${error.message}`);
@@ -223,27 +99,18 @@ const Info = () => {
 
   const seriesDisplay = (count) => {
     return [...Array(count)].map((_, i) => (
-      <Skeleton className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
+      <Skeleton key={i} className="w-[12vw] h-[35vh] bg-[#3C3C3C] rounded-lg shrink-0" />
     ));
   }
 
   const headerDisplay = () => {
-    if (!header) {
-      return;
-    }
-
-    console.log(header);
-    console.log(header.description);
-    header.description = header.description.replace(/(<br>\s*)+/g, "\n\n");
-    header.description = header.description.replace(/<.*?>/g, "");
-    
-    console.log(header.description);
-
+    description = description.replace(/(<br>\s*)+/g, "\n\n");
+    description = description.replace(/<.*?>/g, "");
 
     return (
       <div className="w-full relative">
         <div className="z-20 absolute ml-[15rem] mt-[11rem]">
-          <div className="w-[13.5rem] h-[19rem] bg-cover bg-center rounded-lg" style={{backgroundImage: `url(${header.coverImage.extraLarge})`}}></div>
+          <div className="w-[13.5rem] h-[19rem] bg-cover bg-center rounded-lg" style={{backgroundImage: `url(${coverImage.extraLarge})`}}></div>
           {/* <Skeleton className="w-[13.5rem] h-[19rem] bg-[#999999] rounded-lg" /> */}
           <div className="mt-5 w-full flex flex-row justify-center items-center gap-5">
             <div className="flex flex-row">
@@ -255,12 +122,12 @@ const Info = () => {
           </div>
         </div>
         <div className="w-full h-[45vh] pl-[28.5rem] relative overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center filter blur-sm bg-linear-to-t from-cyan-500 to-blue-500" style={{backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent), url(${header.bannerImage})`}}></div>
+          <div className="absolute inset-0 bg-cover bg-center filter blur-sm bg-linear-to-t from-cyan-500 to-blue-500" style={{backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent), url(${bannerImage})`}}></div>
           
           <div className="absolute bottom-0 flex flex-col gap-3 ml-10 mb-4">
-            <h1 className="text-white text-[1.5rem] font-bold">{header.title.english ? header.title.english : header.title.romaji}</h1>
+            <h1 className="text-white text-[1.5rem] font-bold">{title.english ? title.english : title.romaji}</h1>
             <div className="flex flex-row gap-3">
-              {header.genres.map(value => (
+              {genres.map(value => (
                 <Button variant="outlined" size="sm" className="relative rounded-full">{value}</Button>
               ))}
             </div>
@@ -273,25 +140,25 @@ const Info = () => {
               <div className="flex flex-row gap-3 items-center">
                 <StarFilledIcon className="text-[#E5C366] w-[2.5rem] h-[2.5rem]"/>
                 <div className="flex flex-col">
-                  <h2 className="text-white text-[1.7rem] font-bold">{header.averageScore}%</h2>
-                  <h3 className="text-white text-[0.8rem] opacity-50">#{header.rankings.filter(ranking => ranking.allTime && ranking.type === "RATED").map(ranking => ranking.rank)} Highest Rated All Time</h3>
+                  <h2 className="text-white text-[1.7rem] font-bold">{averageScore}%</h2>
+                  <h3 className="text-white text-[0.8rem] opacity-50">#{rankings.filter(ranking => ranking.allTime && ranking.type === "RATED").map(ranking => ranking.rank)} Highest Rated All Time</h3>
                 </div>
               </div>
 
               <div className="flex flex-row gap-3 items-center">
                 <HeartFilledIcon className="text-[#FF7F7F] w-[2.5rem] h-[2.5rem]"/>
                 <div className="flex flex-col">
-                  <h2 className="text-white text-[1.7rem] font-bold">{header.popularity.toLocaleString()}</h2>
-                  <h3 className="text-white text-[0.8rem] opacity-50">#{header.rankings.filter(ranking => ranking.allTime && ranking.type === "POPULAR").map(ranking => ranking.rank)} Most Popular All Time</h3>
+                  <h2 className="text-white text-[1.7rem] font-bold">{popularity.toLocaleString()}</h2>
+                  <h3 className="text-white text-[0.8rem] opacity-50">#{rankings.filter(ranking => ranking.allTime && ranking.type === "POPULAR").map(ranking => ranking.rank)} Most Popular All Time</h3>
                 </div>
               </div>
             </div>
             <p className="text-white text-[0.9rem] whitespace-pre-line">
-              {header.description && (
-                !fullDescription && header.description.length > 800 ? `${header.description.substring(0, 800)}..` : header.description
+              {description && (
+                !fullDescription && description.length > 800 ? `${description.substring(0, 800)}..` : description
               )}
 
-              {header.description.length > 800 && !fullDescription && (
+              {description.length > 800 && !fullDescription && (
                 <span className="opacity-50 cursor-pointer" onClick={(() => setFullDescription(true))}> Read more</span>
               )}
             </p>
@@ -302,11 +169,6 @@ const Info = () => {
   };
 
   const charactersDisplay = () => {
-    if (!characters) {
-      return;
-    }
-    console.log(characters);
-
     return (
       <div className="flex flex-row flex-wrap justify-between w-full gap-5">
         {characters.edges.map(({ node, role, voiceActors }) => (
@@ -336,11 +198,6 @@ const Info = () => {
   }
 
   const staffDisplay = () => {
-    if (!staff) {
-      return;
-    }
-    console.log(staff);
-
     return (
       <div className="flex flex-row flex-wrap justify-center w-full gap-5">
         {staff.edges.map(({ node, role }) => (
@@ -361,13 +218,8 @@ const Info = () => {
   }
 
   const recommendedDisplay = () => {
-    if (!recommended) {
-      return seriesDisplay(10);
-    }
-    console.log(recommended);
-
     return (
-      recommended.nodes.map(({ mediaRecommendation }) => (
+      recommendations.nodes.map(({ mediaRecommendation }) => (
         <div key={mediaRecommendation.id} className="w-[12vw] h-[35vh] rounded-lg shrink-0 bg-cover bg-center cursor-pointer" 
             style={{backgroundImage: `url(${mediaRecommendation.coverImage.extraLarge})`}}
             onClick={() => navigate(`/${mediaRecommendation.type.toLowerCase()}/${mediaRecommendation.id}/${mediaRecommendation.title.english ? mediaRecommendation.title.english.replaceAll(' ', '-') : mediaRecommendation.title.romaji.replaceAll(' ', '-')}`)}
@@ -396,8 +248,7 @@ const Info = () => {
   }
 
   const metadataDetails = () => {
-    let { format, episodes, duration, status, startDate, endDate, season, seasonYear, favourites, title } = metadata;
-    format === "TV" ? format = format : format = format.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+    format === "TV" ? format : format = format.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
     duration = minToHourMin(duration);
     status = status.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
     const aired = `${formatDate(startDate)} - ${formatDate(endDate)}`;
@@ -427,7 +278,6 @@ const Info = () => {
   }
 
   const tagDetails = () => {
-    console.log(tags);
     return tags.map(({ isGeneralSpoiler, rank, name }, i) => (
       !isGeneralSpoiler ? (
         <div key={i} className="flex flex-row flex-wrap justify-between items-center">
@@ -470,7 +320,7 @@ const Info = () => {
       <div className="flex flex-row flex-wrap mt-[5rem]">
         {headerDisplay()}
 
-        {metadata && tags && externalLinks && (
+        {tags && externalLinks && (
           <div className="w-[20%] bg-[#232323] flex flex-col gap-6 p-6">
             {metadataDetails()}
 
@@ -520,7 +370,7 @@ const Info = () => {
             <h2 className="text-white font-bold text-[1.2rem]">Recommended</h2>
 
             <SwipeCarousel
-              elements={recommended ? recommendedDisplay() : seriesDisplay(10)}
+              elements={recommendations ? recommendedDisplay() : seriesDisplay(10)}
             />
           </div>
 
@@ -549,7 +399,7 @@ const Info = () => {
               <div className="flex flex-col gap-2">
                 {[...Array(4)]
                   .map((_, i) => (
-                    <div className="w-full flex flex-row justify-between items-center">
+                    <div key={i} className="w-full flex flex-row justify-between items-center">
                       <div className="flex flex-row h-[4rem] gap-5">
                         <Skeleton className="aspect-square h-full bg-[#3C3C3C] rounded-lg" />
                         <div className="flex flex-col gap-3">

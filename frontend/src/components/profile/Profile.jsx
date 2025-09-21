@@ -13,10 +13,10 @@ import { IoBookOutline } from "react-icons/io5";
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { GoNumber } from "react-icons/go";
 
-import CustomLayoutToggle from './CustomLayoutToggle';
-import CustomMediumToggle from './CustomMediumToggle';
-import NavBar from './NavBar';
-import SwipeCarousel from './SwipeCarousel';
+import CustomLayoutToggle from '../CustomLayoutToggle';
+import CustomMediumToggle from '../CustomMediumToggle';
+import NavBar from '../main/NavBar';
+import SwipeCarousel from '../SwipeCarousel';
 import { HistoryChart } from './HistoryChart';
 
 const Profile = () => {  

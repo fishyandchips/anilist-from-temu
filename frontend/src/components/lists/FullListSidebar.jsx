@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { ListBulletIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { SearchBar } from "@/components/ui/searchbar";
 
-import CustomToggle from './CustomToggle';
-import CustomLayoutToggle from './CustomLayoutToggle';
-import CustomSelect from './CustomSelect';
+import CustomToggle from '../CustomToggle';
+import CustomLayoutToggle from '../CustomLayoutToggle';
+import CustomSelect from '../CustomSelect';
 
 const FullListSidebar = ({
   list, setList,
@@ -100,7 +100,7 @@ const FullListSidebar = ({
             optional={false}
             options={[
               "Title", "Score", "Progress", "Last Updated", "Last Added",
-              "Start Date", "Completed Date", "Release Date", "Average Score", "Popularity"
+              "Start Date", "Completed Date", "Average Score", "Popularity"
             ]}
           />
         </div>
